@@ -1,0 +1,56 @@
+float4x4 world;
+float4x4 view;
+float4x4 proj;
+float4x4 stupid[10];
+
+sampler2D diffuse_map;
+
+struct VS_INPUT {
+	float4 position : POSITION;
+	float2 uv : TEXCOORD0;
+};
+
+struct PS_INPUT {
+	float4 position : POSITION;
+	float2 uv : TEXCOORD0;
+};
+
+PS_INPUT vs_main(VS_INPUT input) {
+	PS_INPUT o;
+
+	
+	float3x4 temp0, temp1, temp2, temp3;
+	float4 vec = float4(mul(temp1, input.position), 1.0);
+	float4 wp = float4(mul(temp1, input.position), 1.0) , wp1 = float4(mul(temp3, input.position), 1.0),
+	wp4 = float4(1.0);
+	for (float4 wp = float4(mul(temp1, input.position), 1.0) , wp1 = float4(mul(temp3, input.position), 1.0),
+	wp4 = float4(1.0); length(wp) > 0.0 ; wp += wp1, wp4 += wp1)
+	{
+		wp1 *= wp4;
+	}
+	
+	for (; length(view[2] *= 2) == 0; )
+	{
+		wp1 += wp;
+	}
+	
+	while (length(view[2] *= wp) == 0)
+	{
+		wp1 += wp;
+	}
+	do {
+		wp1 += wp;
+	} while(length(view[2] *= view[1] -= 5.0) == 0);
+	
+	//mul(input.position, world);
+	o.position = mul(mul(wp, view), proj);
+	o.uv = input.uv;
+
+	return o;
+}
+
+half4 ps_main(PS_INPUT input, int primitive_id : SV_PrimitiveID) : COLOR0 {
+	half4 c = half4(1, 1, 1, (float)primitive_id);
+	c = tex2D(diffuse_map, input.uv);
+	return c;
+}

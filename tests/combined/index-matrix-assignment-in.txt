@@ -1,0 +1,59 @@
+float4x4 world;
+float4x4 view;
+float4x4 proj;
+float4x4 stupid[10];
+
+sampler2D diffuse_map;
+
+struct VS_INPUT {
+	float4 position : POSITION;
+	float2 uv : TEXCOORD0;
+	int vertex_id : SV_VertexID;
+	int instance_id : SV_InstanceID;
+};
+
+struct PS_INPUT {
+	float4 position : POSITION;
+	float2 uv : TEXCOORD0;
+};
+
+float4 getCol(float4x4 m, int r)
+{
+	return m[r] += float4(1);
+}
+
+PS_INPUT vs_main(VS_INPUT input,
+				uniform float4x4 viewParam) {
+	PS_INPUT o;
+
+	float3x3 dummy = float3x3(float3(0), float3(0), float3(0));
+	float4 wp = mul(input.position, world);
+	
+	dummy[2] =  mul(input.position, world);
+	int index;
+	dummy[index] *= view[3] ++;
+	dummy[index] *= float4(0) + getCol(view, 3) ;
+	dummy._m00_m22_m02 *= float4(0) + --view[3] ;
+	dummy[index] *= dummy[index] * (view[3] += float4(0.5));
+	dummy[index] *= view[3] -= float4(0.5);
+	dummy[index] += dummy[index] *= view[3] -= float4(0.5);
+	
+	stupid[2] = view;
+
+	stupid[2]._m30_m31_m32 += stupid[2]._m30_m21_m32 += wp + dummy._m21_m00_m00;
+
+	dummy[2][0] = 0;
+	dummy._m20_m02 = float2(0, 0);
+	dummy._m22 = dummy[input.instance_id * 2 + input.vertex_id];
+
+	o.position = mul(mul(wp, stupid[2]), proj);
+	o.uv = input.uv;
+
+	return o;
+}
+
+half4 ps_main(PS_INPUT input, int primitive_id : SV_PrimitiveID) : COLOR0 {
+	half4 c = half4(1, 1, 1, (float)primitive_id);
+	c = tex2D(diffuse_map, input.uv);
+	return c;
+}

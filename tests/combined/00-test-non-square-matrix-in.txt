@@ -1,0 +1,68 @@
+float3x4 world[3];
+float4x4 world3[3];
+float3x4 world4[3];
+float4x4 view;
+float4x4 stupid[10];
+
+sampler2D diffuse_map;
+
+struct VS_INPUT {
+	float4 position : POSITION;
+	float2 uv : TEXCOORD0;
+};
+
+struct PS_INPUT {
+	float4 position : POSITION;
+	float2 uv : TEXCOORD0;
+};
+
+PS_INPUT vs_main(VS_INPUT input, 
+				uniform float3x4 world2,
+				uniform float4x4 proj) {
+	PS_INPUT o;
+
+	
+	float4x3 mat43;
+	float3 temp43 = (length(mat43[1]) > 0)? mul(input.position, mat43) : mul(world2, input.position);
+	
+	float3x4 temp0, temp1, temp2, temp3;
+	float4 vec = float4(mul(temp1, input.position), 1.0);
+	float4 wp = float4(mul(temp1, input.position), 1.0) , wp1 = float4(mul(temp3, input.position), 1.0),
+	wp4 = float4(1.0);
+	for (float4 wp = float4(mul(temp1, input.position), 1.0) , wp1 = float4(mul(temp3, input.position), 1.0),
+	wp4 = float4(1.0); length(wp) > 0.0 ; wp += wp1, wp4 += wp1)
+	{
+		wp1 *= wp4;
+	}
+	
+	for (; length(view[2] *= 2) == 0; )
+	{
+		wp1 += wp;
+	}
+	float4 wp3 = float4(0.0);
+	temp1 *= temp2;
+	temp1 *= temp0 	+= temp2 -= temp3 *= 5;
+	temp1 = temp0 /= temp2 *= temp3 - 5;
+	temp1 = temp0 /= temp2 *= temp3 /= 5;
+	float4 wp2 = float4(mul(temp1, input.position), 1.0);
+	
+	world[1] = temp0;
+	wp = world2[2];
+	wp = (world[1] + world2)[2];
+	wp = world[1][2];
+	wp = world3[length(view[2] *= 2)][2];
+	wp = proj[length(view[2] *= 2)][2];
+	wp = float4(mul(world[1], input.position), 1.0);
+	wp = float4(mul(world2, input.position), 1.0);
+	wp = float4(mul(world4[2], input.position), 1.0);
+	o.position = mul(mul(wp, view), proj);
+	o.uv = input.uv;
+
+	return o;
+}
+
+half4 ps_main(PS_INPUT input, int primitive_id : SV_PrimitiveID) : COLOR0 {
+	half4 c = half4(1, 1, 1, (float)primitive_id);
+	c = tex2D(diffuse_map, input.uv);
+	return c;
+}
