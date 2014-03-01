@@ -3,12 +3,6 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
-#ifdef _DEBUG
-#pragma comment(lib, "mesaglsl2-win32.lib")
-#else
-#pragma comment(lib, "mesaglsl2-win32.lib")
-#endif
-
 #endif
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -419,7 +413,7 @@ static bool TestFile (TestRun type,
 	if (kDumpShaderAST)
 		options |= ETranslateOpIntermediate;
 		
-	int parseOk = Hlsl2Glsl_Parse (parser, sourceStr, version, options);
+	int parseOk = Hlsl2Glsl_Parse (parser, sourceStr, cgProfile, version, options);
 	const char* infoLog = Hlsl2Glsl_GetInfoLog( parser );
 	if (kDumpShaderAST)
 	{
@@ -439,7 +433,7 @@ static bool TestFile (TestRun type,
 		Hlsl2Glsl_SetUserAttributeNames (parser, kAttribSemantic, kAttribString, 1);
 		Hlsl2Glsl_UseUserVaryings (parser, true);
 		
-		int translateOk = Hlsl2Glsl_Translate (parser, entryPoint, cgProfile, version, options);
+		int translateOk = Hlsl2Glsl_Translate (parser, entryPoint, version, options);
 		const char* infoLog = Hlsl2Glsl_GetInfoLog( parser );
 		if (translateOk)
 		{
@@ -520,11 +514,11 @@ static bool TestFileFailure (TestRun type,
 	unsigned options = 0;
 	if (kDumpShaderAST)
 		options |= ETranslateOpIntermediate;
-	int parseOk = Hlsl2Glsl_Parse (parser, sourceStr, version, options);
+	int parseOk = Hlsl2Glsl_Parse (parser, sourceStr, NULL, version, options);
 	
 	if (parseOk)
 	{
-		int translateOk = Hlsl2Glsl_Translate (parser, "main", NULL, version, options);
+		int translateOk = Hlsl2Glsl_Translate (parser, "main", version, options);
 		
 		if (translateOk) 
 		{
@@ -570,8 +564,8 @@ static bool TestCombinedFile(const std::string& inputPath, ETargetVersion versio
 		frag_out = outname + "-fragment-out.txt";
 	}
 	
-	bool res = TestFile(VERTEX, inputPath, vert_out, "vs_main", NULL, version, 0, checkGL, true);
-	return res & TestFile(FRAGMENT, inputPath, frag_out, "ps_main", "ps_2_0", version, 0, checkGL, true);
+	bool res = TestFile(VERTEX, inputPath, vert_out, "vs_main", "glslv", version, 0, checkGL, true);
+	return res & TestFile(FRAGMENT, inputPath, frag_out, "ps_main", "glslf", version, 0, checkGL, true);
 }
 
 
@@ -631,8 +625,8 @@ int main (int argc, const char** argv)
 	
 	clock_t time0 = clock();
 
-	g_glsl_optContext[0] = glslopt_initialize(false);
-	g_glsl_optContext[1] = glslopt_initialize(true);
+	g_glsl_optContext[0] = glslopt_initialize(kGlslTargetOpenGL);
+	g_glsl_optContext[1] = glslopt_initialize(kGlslTargetOpenGLES20);
 
 	std::string test = optimizeGLSL("void main() {gl_Position = vec4(0.0);}\n", EShLangVertex, ETargetGLSL_ES_100);
 	

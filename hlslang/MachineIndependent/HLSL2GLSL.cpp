@@ -1955,7 +1955,7 @@ static void initFullSource(std::string &fullSource)
 /// \return
 ///      True if succesfully initialized, false otherwise
 static bool InitializeSymbolTable( TBuiltInStrings* BuiltInStrings, EShLanguage language, TInfoSink& infoSink, 
-                            TSymbolTable* symbolTables, bool bUseGlobalSymbolTable )
+                            TSymbolTable* symbolTables, const TString &cgProfile, bool bUseGlobalSymbolTable )
 {
    TIntermediate intermediate(infoSink); 
    TSymbolTable* symbolTable;
@@ -1967,7 +1967,7 @@ static bool InitializeSymbolTable( TBuiltInStrings* BuiltInStrings, EShLanguage 
 
 	//@TODO: for now, we use same global symbol table for all target language versions.
 	// This is wrong and will have to be changed at some point.
-	TParseContext parseContext(*symbolTable, intermediate, language, ETargetGLSL_ES_100, 0, infoSink);
+	TParseContext parseContext(*symbolTable, intermediate, language, ETargetGLSL_ES_100, cgProfile, 0, infoSink);
 
    GlobalParseContext = &parseContext;
 
@@ -2029,19 +2029,19 @@ static bool InitializeSymbolTable( TBuiltInStrings* BuiltInStrings, EShLanguage 
 ///      Shading language to build symbol table for
 /// \return
 ///      True if succesfully built, false otherwise
-static bool GenerateBuiltInSymbolTable(TInfoSink& infoSink, TSymbolTable* symbolTables, EShLanguage language)
+static bool GenerateBuiltInSymbolTable(TInfoSink& infoSink, TSymbolTable* symbolTables, EShLanguage language, const TString& cgProfile)
 {
    TBuiltIns builtIns;
 
    if ( language != EShLangCount )
    {      
-      InitializeSymbolTable(builtIns.getBuiltInStrings(), language, infoSink, symbolTables, true);
+      InitializeSymbolTable(builtIns.getBuiltInStrings(), language, infoSink, symbolTables, cgProfile, true);
    }
    else
    {
       builtIns.initialize();
-      InitializeSymbolTable(builtIns.getBuiltInStrings(), EShLangVertex, infoSink, symbolTables, false);
-      InitializeSymbolTable(builtIns.getBuiltInStrings(), EShLangFragment, infoSink, symbolTables, false);
+      InitializeSymbolTable(builtIns.getBuiltInStrings(), EShLangVertex, infoSink, symbolTables, cgProfile, false);
+      InitializeSymbolTable(builtIns.getBuiltInStrings(), EShLangFragment, infoSink, symbolTables, cgProfile, false);
    }
 
    return true;
@@ -2070,7 +2070,7 @@ int C_DECL Hlsl2Glsl_Initialize(GlobalAllocateFunction alloc, GlobalFreeFunction
       SetGlobalPoolAllocatorPtr(builtInPoolAllocator);
 
       TSymbolTable symTables[EShLangCount];
-      GenerateBuiltInSymbolTable(infoSink, symTables, EShLangCount);
+      GenerateBuiltInSymbolTable(infoSink, symTables, EShLangCount, "");
 
       PerProcessGPA = new TPoolAllocator(true);
       PerProcessGPA->push();
@@ -2136,6 +2136,7 @@ void C_DECL Hlsl2Glsl_DestructCompiler( ShHandle handle )
 int C_DECL Hlsl2Glsl_Parse(
 	const ShHandle handle,
 	const char* shaderString,
+	const char *cgProfile,
 	ETargetVersion targetVersion,
 	unsigned options)
 {
@@ -2146,6 +2147,7 @@ int C_DECL Hlsl2Glsl_Parse(
       return 0;
 
    HlslCrossCompiler* compiler = handle;
+   compiler->cgProfile = cgProfile != NULL? cgProfile : "";
 
    GlobalPoolAllocator.push();
    compiler->infoSink.info.erase();
@@ -2157,9 +2159,9 @@ int C_DECL Hlsl2Glsl_Parse(
    TIntermediate intermediate(compiler->infoSink);
    TSymbolTable symbolTable(SymbolTables[compiler->getLanguage()]);
 
-   GenerateBuiltInSymbolTable(compiler->infoSink, &symbolTable, compiler->getLanguage());
+   GenerateBuiltInSymbolTable(compiler->infoSink, &symbolTable, compiler->getLanguage(), compiler->cgProfile);
 
-   TParseContext parseContext(symbolTable, intermediate, compiler->getLanguage(), targetVersion, options, compiler->infoSink);
+   TParseContext parseContext(symbolTable, intermediate, compiler->getLanguage(), targetVersion, compiler->cgProfile, options, compiler->infoSink);
 
    GlobalParseContext = &parseContext;
 
@@ -2254,7 +2256,6 @@ int C_DECL Hlsl2Glsl_Parse(
 int C_DECL Hlsl2Glsl_Translate(
 	const ShHandle handle,
 	const char* entry,
-	const char* profile,
 	ETargetVersion targetVersion,
 	unsigned options)
 {
@@ -2269,7 +2270,7 @@ int C_DECL Hlsl2Glsl_Translate(
 		return 0;
 	}
 
-   bool ret = compiler->GetLinker()->link(compiler, entry, profile, targetVersion, options);
+	bool ret = compiler->GetLinker()->link(compiler, entry, compiler->cgProfile.c_str(), targetVersion, options);
 
    return ret ? 1 : 0;
 }

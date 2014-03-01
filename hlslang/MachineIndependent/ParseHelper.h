@@ -15,12 +15,13 @@
 //
 struct TParseContext
 {
-	TParseContext(TSymbolTable& symt, TIntermediate& interm, EShLanguage L, ETargetVersion ver, unsigned opts, TInfoSink& is)
+	TParseContext(TSymbolTable& symt, TIntermediate& interm, EShLanguage L, ETargetVersion ver, const TString &_cgProfile, unsigned opts, TInfoSink& is)
 	: intermediate(interm)
 	, symbolTable(symt)
 	, infoSink(is)
 	, language(L)
 	, targetVersion(ver)
+	, cgProfile (_cgProfile.c_str())
 	, options(opts)
 	, treeRoot(0)
 	, recoveredFromError(false)
@@ -89,6 +90,7 @@ public:
 	
 	EShLanguage language;
 	ETargetVersion targetVersion;
+	TString cgProfile;
 	unsigned options; // TTranslateOptions bitmask
 	
 	TIntermNode* treeRoot;       // root of parse tree being created

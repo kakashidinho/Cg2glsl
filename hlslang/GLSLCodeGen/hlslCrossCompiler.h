@@ -39,6 +39,7 @@ private:
 	bool m_GlslProduced;
 
 public:
+	TString cgProfile;//profile for target 
 	HlslLinker* linker;
 	TInfoSink infoSink;
 	std::vector<GlslFunction*> functionList;

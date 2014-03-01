@@ -66,6 +66,8 @@ inline TString* NewPoolTString(const char* s)
 template <class T> class TVector : public std::vector<T, pool_allocator<T> >
 {
 public:
+	POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
+
    typedef typename std::vector<T, pool_allocator<T> >::size_type size_type;
    TVector() : std::vector<T, pool_allocator<T> >()
    {

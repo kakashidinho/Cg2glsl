@@ -202,6 +202,7 @@ SH_IMPORT_EXPORT void C_DECL Hlsl2Glsl_DestructCompiler( ShHandle handle );
 SH_IMPORT_EXPORT int C_DECL Hlsl2Glsl_Parse(
 	const ShHandle handle,
 	const char* shaderString,
+	const char* cgProfile,
 	ETargetVersion targetVersion,
 	unsigned options);
 
@@ -211,7 +212,6 @@ SH_IMPORT_EXPORT int C_DECL Hlsl2Glsl_Parse(
 SH_IMPORT_EXPORT int C_DECL Hlsl2Glsl_Translate(
 	const ShHandle handle,
 	const char* entry,
-	const char* cg_profile,
 	ETargetVersion targetVersion,
 	unsigned options);
 

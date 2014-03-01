@@ -144,14 +144,14 @@ public:
 	mangledName(*name + '('),
 	op(tOp),
 	defined(false),
-	m_isInline(retType.isNonSquareMatrix()) { }
+	m_isInline(retType.isNonSquareMatrix()) {  initOriginalName ();}
 	TFunction(const TString *name, const TTypeInfo* info, TType& retType, TOperator tOp = EOpNull) : 
 	TSymbol(name, info), 
 	returnType(retType),
 	mangledName(*name + '('),
 	op(tOp),
 	defined(false),
-	m_isInline(retType.isNonSquareMatrix()){ }
+	m_isInline(retType.isNonSquareMatrix()){ initOriginalName (); }
 	virtual ~TFunction();
 	virtual bool isFunction() const { return true; }    
     
@@ -164,7 +164,8 @@ public:
 			m_isInline = p.type->isNonSquareMatrix();
 	}
     
-	const TString& getMangledName() const { return mangledName; }
+	const TString& getOriginalName() const { return nameWithoutProfiles; }//name without profiles prefix
+	const TString& getMangledName() const { return mangledName; } //name with parameters and return type added
 	const TType& getReturnType() const { return returnType; }
 	void relateToOperator(TOperator o) { op = o; }
 	TOperator getBuiltInOp() const { return op; }
@@ -181,11 +182,65 @@ public:
 
 	void setInline(bool b) {m_isInline = b;}
 	bool isInline() const {return m_isInline;}
+
+	//is this function supported the specified cg profile
+	bool isProfileSupported(const TString& cgProfile) const{
+		const TString& funcName = this->getName();
+		if (cgProfile.compare(""))//not empty
+		{
+			//search the list of profiles in this function's name
+			size_t begin_pos = funcName.find("@");
+			if (begin_pos != std::string::npos)
+			{
+				TString foundProfile;
+				size_t end_pos;
+				bool profileMatch = false;
+				do {
+					end_pos = funcName.find("@", begin_pos + 1);
+					if (end_pos != std::string::npos)
+					{
+						foundProfile = funcName.substr(begin_pos + 1, end_pos - begin_pos - 1);
+					
+						if (foundProfile.compare(cgProfile) == 0)
+						{
+							profileMatch = true;
+						}
+						else
+						{
+							//continue the search
+							begin_pos = end_pos;
+						}
+					}//if (end_pos != std::string::npos)
+
+				} while (!profileMatch && end_pos != std::string::npos);
+
+				return profileMatch;
+
+			}//if (begin_pos != std::string::npos)
+			else
+				return false;
+		}//if (cgProfile.compare(""))
+		else
+		{
+			return true;//of course this function support empty profile 
+		}
+	}
 protected:
+	void initOriginalName() {
+		size_t pos = name->find_last_of("@");
+		if (pos != std::string::npos)
+		{
+			nameWithoutProfiles = name->substr(pos + 1);
+		}
+		else
+			nameWithoutProfiles = (*name);
+	}
+
 	typedef TVector<TParameter> TParamList;
 	TParamList parameters;
 	TType returnType;
 	TString mangledName;
+	TString nameWithoutProfiles;//the original name (without profiles prefix)
 	TOperator op;
 	bool defined;
 	bool m_isInline;//rule: always inline function that uses non-square matrix as parameter or return type

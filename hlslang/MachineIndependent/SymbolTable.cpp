@@ -4,6 +4,7 @@
 
 
 #include "SymbolTable.h"
+#include "ParseHelper.h"
 
 TString* TParameter::NullSemantic = 0;
 
@@ -363,10 +364,11 @@ TSymbol* TSymbolTableLevel::findCompatible (const TFunction *call, bool &ambiguo
 	tLevel::const_iterator it = level.begin();
 	while (it != level.end())
 	{
-		if (it->second->getName() == name && it->second->isFunction())
+		if (it->second->isFunction())
 		{
 			TFunction* func = (TFunction*)it->second;
-			if (call->getParamCount() == func->getParamCount())
+			if ((func->getName() == name || (func->getOriginalName() == name && func->isProfileSupported(GlobalParseContext->cgProfile)) 
+				&& call->getParamCount() == func->getParamCount()))
 				funcList.push_back (func);
 		}
 		++it;

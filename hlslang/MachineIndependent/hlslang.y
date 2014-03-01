@@ -182,9 +182,15 @@ Jutta Degener, 1995
 %type <interm.ann> annotation annotation_list
 %type <interm.typeInfo> type_info
 %type <lex> annotation_item semantic
+%type <lex> profile_list
 
 %start translation_unit 
 %%
+
+profile_list
+	: PROFILE {$$.string = NewPoolTString("@"); *$$.string += *$1.string;}
+	| profile_list  PROFILE {*$$.string += "@";  *$$.string += *$2.string;}
+	;
 
 variable_identifier 
     : IDENTIFIER {
@@ -1287,7 +1293,7 @@ function_header
         function = new TFunction(mangled, type);
         $$ = function;
     }
-    | PROFILE fully_specified_type IDENTIFIER LEFT_PAREN {
+    | profile_list fully_specified_type IDENTIFIER LEFT_PAREN {
         if ($2.qualifier != EvqGlobal && $2.qualifier != EvqTemporary) {
             parseContext.error($3.line, "no qualifiers allowed for function return", getQualifierString($2.qualifier), "");
             parseContext.recover();
@@ -1303,9 +1309,9 @@ function_header
 	TString prefix = "xl";
 	prefix += *$1.string;
 	if ( *$3.string == "main")
-	    mangled = NewPoolTString( (prefix + "_xlat_main").c_str() ) ;
+	    mangled = NewPoolTString( (prefix + "@xlat_main").c_str() ) ;
 	else
-	    mangled = NewPoolTString( (prefix + "_" + *$3.string).c_str());
+	    mangled = NewPoolTString( (prefix + "@" + *$3.string).c_str());
 
         function = new TFunction(mangled, type);
         $$ = function;

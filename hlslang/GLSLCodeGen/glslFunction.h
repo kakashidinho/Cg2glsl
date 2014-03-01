@@ -60,7 +60,7 @@ public:
 	void endStatement() { if (inStatement) { *active << ";\n"; inStatement = false;}}
 
 	const std::string &getName() { return name; }
-	void changeToNormalName(const std::string &cgProfile);//omit profile prefix from name
+	void changeToNormalName();//omit profile prefix from name
 	const std::string &getMangledName() { return mangledName; }
 
 	EGlslSymbolType getReturnType() { return returnType; }

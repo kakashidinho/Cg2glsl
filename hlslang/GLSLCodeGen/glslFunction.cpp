@@ -40,16 +40,14 @@ GlslFunction::~GlslFunction()
 	}
 }
 
-void GlslFunction::changeToNormalName(const std::string &cgProfile)
+void GlslFunction::changeToNormalName()
 {
-	if (cgProfile.size() == 0)
-		return;
-
-	std::string prefix = "xl";
-	prefix += cgProfile + "_";
-
-	if (this->name.find(prefix) != std::string::npos)
-		this->name = this->name.substr(prefix.size());
+	size_t pos1 = this->name.find("@");
+	if ( pos1 != std::string::npos)
+	{
+		size_t pos2 = this->name.find_last_of("@");
+		this->name = this->name.substr(pos2 + 1);
+	}
 }
 
 void GlslFunction::pushDepth(int depth) { this->depth.push_back(depth); }

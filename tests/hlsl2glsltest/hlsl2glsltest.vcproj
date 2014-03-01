@@ -44,7 +44,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="D:\Ogre1.8.1\glsl_optimizer\src\glsl"
+				AdditionalIncludeDirectories="..\..\glsl_optimizer\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_HAS_ITERATOR_DEBUGGING=0;_CRT_SECURE_NO_DEPRECATE;_HAS_EXCEPTIONS=0;_SECURE_SCL=0"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -64,9 +64,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib"
+				AdditionalDependencies="opengl32.lib glsl_optimizer_lib-win32d.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="D:\Ogre1.8.1\glsl_optimizer\src\glsl\msvc\build\mesaglsl2\Debug"
+				AdditionalLibraryDirectories="..\..\glsl_optimizer\lib\win32"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -122,7 +122,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="D:\Ogre1.8.1\glsl_optimizer\src\glsl\msvc"
+				AdditionalIncludeDirectories="..\..\glsl_optimizer\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_HAS_ITERATOR_DEBUGGING=0;_CRT_SECURE_NO_DEPRECATE;_HAS_EXCEPTIONS=0;_SECURE_SCL=0"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -141,9 +141,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib"
+				AdditionalDependencies="opengl32.lib glsl_optimizer_lib-win32.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="D:\Ogre1.8.1\glsl_optimizer\src\glsl\msvc\build\mesaglsl2\Release"
+				AdditionalLibraryDirectories="..\..\glsl_optimizer\lib\win32"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
 				SubSystem="1"

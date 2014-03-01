@@ -148,10 +148,84 @@ static const char* resultString[EAttrSemCount] = {
 
 static const char* kUserVaryingPrefix = "xlv_";
 
+enum FunctionMatchType{
+	FUNC_NOT_MATCH = 0,
+	FUNC_NAME_MATCH = 1,//match name
+	FUNC_FULL_MATCH = 2//match profile and name
+};
+
 static inline void AddToVaryings (std::stringstream& s, TPrecision prec, const std::string& type, const std::string& name)
 {
 	if (strstr (name.c_str(), kUserVaryingPrefix) == name.c_str())
 		s << "varying " << getGLSLPrecisiontring(prec) << type << " " << name << ";\n";
+}
+
+static inline FunctionMatchType IsFunctionMatch(const std::string & funcName, const std::string &fullRequiredFuncName, const std::string &cgProfile)
+{
+	//remove the profiles prefix
+	size_t realNamePos = fullRequiredFuncName.find_last_of("@");
+	std::string requiredFuncName;
+	if (realNamePos != std::string::npos)
+		requiredFuncName = fullRequiredFuncName.substr(realNamePos + 1);
+	else
+		requiredFuncName = fullRequiredFuncName;
+
+	//first check if name match
+	realNamePos = funcName.find_last_of("@");
+	std::string realFuncName;
+	if (realNamePos != std::string::npos)
+		realFuncName = funcName.substr(realNamePos + 1);
+	else
+		realFuncName = funcName;
+
+	if (requiredFuncName.compare(realFuncName) != 0)
+		return FUNC_NOT_MATCH;
+
+	//now find the profile in the prefix
+	if (cgProfile.compare(""))//not empty
+	{
+		//search the list of profiles in this function's name
+		size_t begin_pos = funcName.find("@");
+		if (begin_pos != std::string::npos)
+		{
+			std::string foundProfile;
+			size_t end_pos;
+			bool profileMatch = false;
+			do {
+				end_pos = funcName.find("@", begin_pos + 1);
+				if (end_pos != std::string::npos)
+				{
+					foundProfile = funcName.substr(begin_pos + 1, end_pos - begin_pos - 1);
+				
+					if (foundProfile.compare(cgProfile) == 0)
+					{
+						profileMatch = true;
+					}
+					else
+					{
+						//continue the search
+						begin_pos = end_pos;
+					}
+				}//if (end_pos != std::string::npos)
+
+			} while (!profileMatch && end_pos != std::string::npos);
+
+			if (profileMatch)
+			{
+				return FUNC_FULL_MATCH;
+			}
+			else
+				return FUNC_NOT_MATCH;
+
+		}//if (begin_pos != std::string::npos)
+		else
+			return FUNC_NAME_MATCH;
+	}//if (cgProfile.compare(""))
+	else
+	{
+		return FUNC_FULL_MATCH;//no profile specified, so treats this function as full match
+	}
+
 }
 
 static inline void InitFunctionFinder(int &result)
@@ -169,16 +243,23 @@ static inline bool IsFunctionFound(int result)
 	return result != 0;
 }
 
+static inline bool IsBestFunctionFound(int result)
+{
+	return result >= 1;
+}
+
 static inline void FunctionFinderCheck(GlslFunction* currentFunc, 
 								GlslFunction *&destFunction, 
-								const std::string &best_name,
+								const std::string &cgProfile,
 								const std::string &name,
 								bool mangled,
 								int &result
 								)
 {
 	const std::string & currentFunc_name = mangled? currentFunc->getMangledName() : currentFunc->getName();
-	if ( currentFunc_name.compare(best_name) == 0)
+	FunctionMatchType functionMatchRe = IsFunctionMatch(currentFunc_name, name, cgProfile);
+
+	if ( functionMatchRe == FUNC_FULL_MATCH)
 	{
 		if (result < 1)//1st time best function found
 		{
@@ -188,9 +269,9 @@ static inline void FunctionFinderCheck(GlslFunction* currentFunc,
 		else//best function found more than once
 			result ++;
 	}
-	else if (currentFunc_name.compare(name)== 0)
+	else if (functionMatchRe == FUNC_NAME_MATCH)
 	{
-		if (result < 1 && result > -1)//not found function yet
+		if (result == 0)//not found function yet
 		{
 			result = -1;
 			destFunction = currentFunc;
@@ -200,20 +281,6 @@ static inline void FunctionFinderCheck(GlslFunction* currentFunc,
 	}
 }
 
-static inline std::string GetBestFunctionName(const std::string &name, const std::string &cgProfile)
-{
-	std::string best_name;
-	if (cgProfile.compare(""))//not empty
-	{
-		best_name = "xl";
-		best_name += cgProfile + "_";
-		best_name += name;
-	}
-	else
-		best_name = name;
-
-	return best_name;
-}
 
 HlslLinker::HlslLinker(TInfoSink& infoSink_) : infoSink(infoSink_)
 {
@@ -513,14 +580,13 @@ bool HlslLinker::addCalledFunctions( GlslFunction *func, FunctionSet& funcSet, s
 		GlslFunction* func = NULL;
 		{
 			std::vector<GlslFunction*>::iterator it = funcList.begin();
-			std::string bestMangledName = GetBestFunctionName(*cit, this->cgProfile);
 			int result;
 			InitFunctionFinder(result);
 
 			//This might be better as a more efficient search
-			while (it != funcList.end() && !IsFunctionFound(result))
+			while (it != funcList.end() && !IsBestFunctionFound(result))
 			{
-				FunctionFinderCheck(*it, func, bestMangledName, *cit, true, result);
+				FunctionFinderCheck(*it, func, this->cgProfile, *cit, true, result);
 				it++;
 			}
 
@@ -611,7 +677,6 @@ bool HlslLinker::buildFunctionLists(HlslCrossCompiler* comp, EShLanguage lang, c
 	// build the list of functions
 	std::vector<GlslFunction*> &fl = comp->functionList;
 	// cg profile specific entry point
-	std::string best_entryPoint = GetBestFunctionName(entryPoint, this->cgProfile);
 	
 	int result = 0;
 	InitFunctionFinder(result);
@@ -626,7 +691,7 @@ bool HlslLinker::buildFunctionLists(HlslCrossCompiler* comp, EShLanguage lang, c
 		else
 			functionList.push_back(*fit);
 		
-		FunctionFinderCheck((*fit), funcMain, best_entryPoint, entryPoint, false, result);
+		FunctionFinderCheck((*fit), funcMain, this->cgProfile, entryPoint, false, result);
 		
 	}
 
@@ -1141,8 +1206,10 @@ bool HlslLinker::link(HlslCrossCompiler* compiler, const char* entryFunc, const 
 		ite != calledFunctions.end();
 		++ite)
 	{
-		(*ite)->changeToNormalName(this->cgProfile);
+		(*ite)->changeToNormalName();
 	}
+
+	funcMain->changeToNormalName();
 	
 	// uniforms and used built-in functions
 	std::vector<GlslSymbol*> constants;
