@@ -30,27 +30,27 @@ static void initFullSource(std::string &fullSource)
 	{
 	fullSource = 
 	"//-----------------float--------------------\n\
-	struct float2x3\n\
+	struct float3x2\n\
 	{\n\
 		float3 col0;\n\
 		float3 col1;\n\
 	};\n\
 	\n\
-	struct float3x2\n\
+	struct float2x3\n\
 	{\n\
 		float2 col0;\n\
 		float2 col1;\n\
 		float2 col2;\n\
 	};\n\
 	\n\
-	struct float3x4\n\
+	struct float4x3\n\
 	{\n\
 		float4 col0;\n\
 		float4 col1;\n\
 		float4 col2;\n\
 	};\n\
 	\n\
-	struct float4x3\n\
+	struct float3x4\n\
 	{\n\
 		float3 col0;\n\
 		float3 col1;\n\
@@ -58,13 +58,13 @@ static void initFullSource(std::string &fullSource)
 		float3 col3;\n\
 	};\n\
 	\n\
-	struct float2x4\n\
+	struct float4x2\n\
 	{\n\
 		float4 col0;\n\
 		float4 col1;\n\
 	};\n\
 	\n\
-	struct float4x2\n\
+	struct float2x4\n\
 	{\n\
 		float2 col0;\n\
 		float2 col1;\n\
@@ -72,15 +72,11 @@ static void initFullSource(std::string &fullSource)
 		float2 col3;\n\
 	};\n\
 	//-----------conversion--------------------\n\
-	float2x2 __constructfloat2x2(float2x3 m)\n\
-	{\n\
-		return float2x2( float2( m.col0), float2( m.col1));\n\
-	}\n\
 	float2x2 __constructfloat2x2(float3x2 m)\n\
 	{\n\
 		return float2x2( float2( m.col0), float2( m.col1));\n\
 	}\n\
-	float2x2 __constructfloat2x2(float3x4 m)\n\
+	float2x2 __constructfloat2x2(float2x3 m)\n\
 	{\n\
 		return float2x2( float2( m.col0), float2( m.col1));\n\
 	}\n\
@@ -88,7 +84,7 @@ static void initFullSource(std::string &fullSource)
 	{\n\
 		return float2x2( float2( m.col0), float2( m.col1));\n\
 	}\n\
-	float2x2 __constructfloat2x2(float2x4 m)\n\
+	float2x2 __constructfloat2x2(float3x4 m)\n\
 	{\n\
 		return float2x2( float2( m.col0), float2( m.col1));\n\
 	}\n\
@@ -96,223 +92,227 @@ static void initFullSource(std::string &fullSource)
 	{\n\
 		return float2x2( float2( m.col0), float2( m.col1));\n\
 	}\n\
-	\n\
-	float3x3 __constructfloat3x3(float3x4 m)\n\
+	float2x2 __constructfloat2x2(float2x4 m)\n\
 	{\n\
-		return float3x3( float3( m.col0), float3( m.col1), float3( m.col2));\n\
+		return float2x2( float2( m.col0), float2( m.col1));\n\
 	}\n\
+	\n\
 	float3x3 __constructfloat3x3(float4x3 m)\n\
 	{\n\
 		return float3x3( float3( m.col0), float3( m.col1), float3( m.col2));\n\
 	}\n\
-	float2x3 __constructfloat2x3(float s)\n\
+	float3x3 __constructfloat3x3(float3x4 m)\n\
 	{\n\
-		return float2x3( float3( s), float3( s));\n\
+		return float3x3( float3( m.col0), float3( m.col1), float3( m.col2));\n\
 	}\n\
-	float2x3 __constructfloat2x3(float s00, float s01, float s02, \n\
-								float s10, float s11, float s12 )\n\
-	{\n\
-		return float2x3( float3( s00, s01, s02),\n\
-						 float3(s10, s11, s12));\n\
-	}\n\
-	\n\
-	float2x3 __constructfloat2x3(float3x3 m )\n\
-	{\n\
-		return float2x3( float3( m[0]),\n\
-						 float3( m[1]));\n\
-	}\n\
-	float2x3 __constructfloat2x3(float2x3 m )\n\
-	{\n\
-		return float2x3( float3( m[0]),\n\
-						 float3( m[1]));\n\
-	}\n\
-	\n\
-	\n\
-	float2x3 __constructfloat2x3(float3x4 m )\n\
-	{\n\
-		return float2x3( float3( m.col0),\n\
-						 float3( m.col1));\n\
-	}\n\
-	\n\
-	\n\
-	float2x3 __constructfloat2x3(float4x3 m )\n\
-	{\n\
-		return float2x3( float3( m.col0),\n\
-						 float3( m.col1));\n\
-	}\n\
-	float2x3 __constructfloat2x3(float4x4 m )\n\
-	{\n\
-		return float2x3( float3( m[0]),\n\
-						 float3( m[1]));\n\
-	}\n\
-	\n\
 	float3x2 __constructfloat3x2(float s)\n\
 	{\n\
-		return float3x2( float2( s), float2( s), float2(s));\n\
+		return float3x2( float3( s), float3( s));\n\
 	}\n\
-	float3x2 __constructfloat3x2(float s00, float s01, \n\
-								float s10, float s11, \n\
-								float s20, float s21 )\n\
+	float3x2 __constructfloat3x2(float s00, float s01, float s02, \n\
+								float s10, float s11, float s12 )\n\
 	{\n\
-		return float3x2( float2( s00, s01),\n\
-						 float2(s10, s11), \n\
-						 float2(s20, s21));\n\
+		return float3x2( float3( s00, s01, s02),\n\
+						 float3(s10, s11, s12));\n\
 	}\n\
 	\n\
 	float3x2 __constructfloat3x2(float3x3 m )\n\
 	{\n\
-		return float3x2( float2( m[0]),\n\
-						 float2( m[1]),\n\
-						 float2( m[2]));\n\
+		return float3x2( float3( m[0]),\n\
+						 float3( m[1]));\n\
 	}\n\
 	float3x2 __constructfloat3x2(float3x2 m )\n\
 	{\n\
-		return float3x2( float2( m[0]),\n\
-						 float2( m[1]),\n\
-						 float2( m[2]));\n\
-	}\n\
-	\n\
-	\n\
-	float3x2 __constructfloat3x2(float3x4 m )\n\
-	{\n\
-		return float3x2( float2( m.col0),\n\
-						 float2( m.col1),\n\
-						 float2( m.col2));\n\
+		return float3x2( float3( m[0]),\n\
+						 float3( m[1]));\n\
 	}\n\
 	\n\
 	\n\
 	float3x2 __constructfloat3x2(float4x3 m )\n\
 	{\n\
-		return float3x2( float2( m.col0),\n\
-						 float2( m.col1),\n\
-						 float2( m.col2));\n\
+		return float3x2( float3( m.col0),\n\
+						 float3( m.col1));\n\
+	}\n\
+	\n\
+	\n\
+	float3x2 __constructfloat3x2(float3x4 m )\n\
+	{\n\
+		return float3x2( float3( m.col0),\n\
+						 float3( m.col1));\n\
 	}\n\
 	float3x2 __constructfloat3x2(float4x4 m )\n\
 	{\n\
-		return float3x2( float2( m[0]),\n\
+		return float3x2( float3( m[0]),\n\
+						 float3( m[1]));\n\
+	}\n\
+	\n\
+	float2x3 __constructfloat2x3(float s)\n\
+	{\n\
+		return float2x3( float2( s), float2( s), float2(s));\n\
+	}\n\
+	float2x3 __constructfloat2x3(float s00, float s01, \n\
+								float s10, float s11, \n\
+								float s20, float s21 )\n\
+	{\n\
+		return float2x3( float2( s00, s01),\n\
+						 float2(s10, s11), \n\
+						 float2(s20, s21));\n\
+	}\n\
+	\n\
+	float2x3 __constructfloat2x3(float3x3 m )\n\
+	{\n\
+		return float2x3( float2( m[0]),\n\
+						 float2( m[1]),\n\
+						 float2( m[2]));\n\
+	}\n\
+	float2x3 __constructfloat2x3(float2x3 m )\n\
+	{\n\
+		return float2x3( float2( m[0]),\n\
 						 float2( m[1]),\n\
 						 float2( m[2]));\n\
 	}\n\
 	\n\
-	float3x4 __constructfloat3x4(float s)\n\
+	\n\
+	float2x3 __constructfloat2x3(float4x3 m )\n\
 	{\n\
-		return float3x4( float4( s), float4( s), float4(s));\n\
-	}\n\
-	float3x4 __constructfloat3x4(float s00, float s01, float s02, float s03,\n\
-								float s10, float s11, float s12, float s13,\n\
-								float s20, float s21, float s22, float s23)\n\
-	{\n\
-		return float3x4( float4( s00, s01, s02, s03),\n\
-						 float4(s10, s11, s12, s13),\n\
-						 float4(s20, s21, s22, s23));\n\
+		return float2x3( float2( m.col0),\n\
+						 float2( m.col1),\n\
+						 float2( m.col2));\n\
 	}\n\
 	\n\
-	float3x4 __constructfloat3x4(float3x4 m )\n\
+	\n\
+	float2x3 __constructfloat2x3(float3x4 m )\n\
 	{\n\
-		return float3x4( float4( m[0]),\n\
-						 float4( m[1]),\n\
-						 float4( m[2]));\n\
+		return float2x3( float2( m.col0),\n\
+						 float2( m.col1),\n\
+						 float2( m.col2));\n\
 	}\n\
-	float3x4 __constructfloat3x4(float4x4 m )\n\
+	float2x3 __constructfloat2x3(float4x4 m )\n\
 	{\n\
-		return float3x4( float4( m[0]),\n\
-						 float4( m[1]),\n\
-						 float4( m[2]));\n\
+		return float2x3( float2( m[0]),\n\
+						 float2( m[1]),\n\
+						 float2( m[2]));\n\
 	}\n\
 	\n\
 	float4x3 __constructfloat4x3(float s)\n\
 	{\n\
-		return float4x3( float3( s), float3( s), float3(s), float3(s));\n\
+		return float4x3( float4( s), float4( s), float4(s));\n\
+	}\n\
+	float4x3 __constructfloat4x3(float s00, float s01, float s02, float s03,\n\
+								float s10, float s11, float s12, float s13,\n\
+								float s20, float s21, float s22, float s23)\n\
+	{\n\
+		return float4x3( float4( s00, s01, s02, s03),\n\
+						 float4(s10, s11, s12, s13),\n\
+						 float4(s20, s21, s22, s23));\n\
 	}\n\
 	\n\
-	float4x3 __constructfloat4x3(float s00, float s01, float s02, \n\
+	float4x3 __constructfloat4x3(float4x3 m )\n\
+	{\n\
+		return float4x3( float4( m[0]),\n\
+						 float4( m[1]),\n\
+						 float4( m[2]));\n\
+	}\n\
+	float4x3 __constructfloat4x3(float4x4 m )\n\
+	{\n\
+		return float4x3( float4( m[0]),\n\
+						 float4( m[1]),\n\
+						 float4( m[2]));\n\
+	}\n\
+	\n\
+	float3x4 __constructfloat3x4(float s)\n\
+	{\n\
+		return float3x4( float3( s), float3( s), float3(s), float3(s));\n\
+	}\n\
+	\n\
+	float3x4 __constructfloat3x4(float s00, float s01, float s02, \n\
 								float s10, float s11, float s12, \n\
 								float s20, float s21, float s22, \n\
 								float s30, float s31, float s32 )\n\
 	{\n\
-		return float4x3( float3( s00, s01, s02),\n\
+		return float3x4( float3( s00, s01, s02),\n\
 						 float3(s10, s11, s12),\n\
 						 float3(s20, s21, s22), \n\
 						 float3(s30, s31, s32));\n\
 	}\n\
 	\n\
-	float4x3 __constructfloat4x3(float4x3 m )\n\
+	float3x4 __constructfloat3x4(float3x4 m )\n\
 	{\n\
-		return float4x3( float3( m[0]),\n\
+		return float3x4( float3( m[0]),\n\
 						 float3( m[1]),\n\
 						 float3( m[2]),\n\
 						 float3( m[3]));\n\
 	}\n\
-	float4x3 __constructfloat4x3(float4x4 m )\n\
+	float3x4 __constructfloat3x4(float4x4 m )\n\
 	{\n\
-		return float4x3( float3( m[0]),\n\
+		return float3x4( float3( m[0]),\n\
 						 float3( m[1]),\n\
 						 float3( m[2]),\n\
 						 float3( m[3]));\n\
-	}\n\
-	\n\
-	float2x4 __constructfloat2x4(float s)\n\
-	{\n\
-		return float2x4( float4( s), float4( s));\n\
-	}\n\
-	float2x4 __constructfloat2x4(float s00, float s01, float s02, float s03,\n\
-								float s10, float s11, float s12, float s13)\n\
-	{\n\
-		return float2x4( float4( s00, s01, s02, s03),\n\
-						 float4(s10, s11, s12, s13));\n\
-	}\n\
-	\n\
-	float2x4 __constructfloat2x4(float2x4 m )\n\
-	{\n\
-		return float2x4( float4( m[0]),\n\
-						 float4( m[1]));\n\
-	}\n\
-	float2x4 __constructfloat2x4(float3x4 m )\n\
-	{\n\
-		return float2x4( float4( m[0]),\n\
-						 float4( m[1]));\n\
-	}\n\
-	\n\
-	float2x4 __constructfloat2x4(float4x4 m )\n\
-	{\n\
-		return float2x4( float4( m[0]),\n\
-						 float4( m[1]));\n\
 	}\n\
 	\n\
 	float4x2 __constructfloat4x2(float s)\n\
 	{\n\
-		return float4x2( float2( s), float2( s), float2(s), float2(s));\n\
+		return float4x2( float4( s), float4( s));\n\
+	}\n\
+	float4x2 __constructfloat4x2(float s00, float s01, float s02, float s03,\n\
+								float s10, float s11, float s12, float s13)\n\
+	{\n\
+		return float4x2( float4( s00, s01, s02, s03),\n\
+						 float4(s10, s11, s12, s13));\n\
 	}\n\
 	\n\
-	float4x2 __constructfloat4x2(float s00, float s01, \n\
+	float4x2 __constructfloat4x2(float4x2 m )\n\
+	{\n\
+		return float4x2( float4( m[0]),\n\
+						 float4( m[1]));\n\
+	}\n\
+	float4x2 __constructfloat4x2(float4x3 m )\n\
+	{\n\
+		return float4x2( float4( m[0]),\n\
+						 float4( m[1]));\n\
+	}\n\
+	\n\
+	float4x2 __constructfloat4x2(float4x4 m )\n\
+	{\n\
+		return float4x2( float4( m[0]),\n\
+						 float4( m[1]));\n\
+	}\n\
+	\n\
+	float2x4 __constructfloat2x4(float s)\n\
+	{\n\
+		return float2x4( float2( s), float2( s), float2(s), float2(s));\n\
+	}\n\
+	\n\
+	float2x4 __constructfloat2x4(float s00, float s01, \n\
 								float s10, float s11, \n\
 								float s20, float s21, \n\
 								float s30, float s31 )\n\
 	{\n\
-		return float4x2( float2( s00, s01),\n\
+		return float2x4( float2( s00, s01),\n\
 						 float2(s10, s11),\n\
 						 float2(s20, s21), \n\
 						 float2(s30, s31));\n\
 	}\n\
 	\n\
-	float4x2 __constructfloat4x2(float4x2 m )\n\
+	float2x4 __constructfloat2x4(float2x4 m )\n\
 	{\n\
-		return float4x2( float2( m[0]),\n\
+		return float2x4( float2( m[0]),\n\
 						 float2( m[1]),\n\
 						 float2( m[2]),\n\
 						 float2( m[3]));\n\
 	}\n\
-	float4x2 __constructfloat4x2(float4x3 m )\n\
+	float2x4 __constructfloat2x4(float3x4 m )\n\
 	{\n\
-		return float4x2( float2( m[0]),\n\
+		return float2x4( float2( m[0]),\n\
 						 float2( m[1]),\n\
 						 float2( m[2]),\n\
 						 float2( m[3]));\n\
 	}\n\
 	\n\
-	float4x2 __constructfloat4x2(float4x4 m )\n\
+	float2x4 __constructfloat2x4(float4x4 m )\n\
 	{\n\
-		return float4x2( float2( m[0]),\n\
+		return float2x4( float2( m[0]),\n\
 						 float2( m[1]),\n\
 						 float2( m[2]),\n\
 						 float2( m[3]));\n\
@@ -323,7 +323,7 @@ static void initFullSource(std::string &fullSource)
 	{
 	fullSource += 
 	"//---------get matrix rows-----------------\n\
-	void getRows(float3x4 m, out float3 row[4])\n\
+	void getRows(float4x3 m, out float3 row[4])\n\
 	{\n\
 		row[0] = float3(m.col0.x, m.col1.x, m.col2.x );\n\
 		row[1] = float3(m.col0.y, m.col1.y, m.col2.y );\n\
@@ -337,7 +337,7 @@ static void initFullSource(std::string &fullSource)
 		row[2] = float4(m[0].z, m[1].z, m[2].y, m[3].z );\n\
 		row[3] = float4(m[0].w, m[1].w, m[2].w, m[3].w );\n\
 	}\n\
-	void getRows(float2x4 m, out float2 row[4])\n\
+	void getRows(float4x2 m, out float2 row[4])\n\
 	{\n\
 		row[0] = float2(m.col0.x, m.col1.x );\n\
 		row[1] = float2(m.col0.y, m.col1.y );\n\
@@ -350,19 +350,19 @@ static void initFullSource(std::string &fullSource)
 		row[1] = float3(m[0].y, m[1].y, m[2].y );\n\
 		row[2] = float3(m[0].z, m[1].z, m[2].y );\n\
 	}\n\
-	void getRows(float4x3 m, out float4 row[3])\n\
+	void getRows(float3x4 m, out float4 row[3])\n\
 	{\n\
 		row[0] = float4(m.col0.x, m.col1.x, m.col2.x, m.col3.x );\n\
 		row[1] = float4(m.col0.y, m.col1.y, m.col2.y, m.col3.y );\n\
 		row[2] = float4(m.col0.z, m.col1.z, m.col2.z, m.col3.z );\n\
 	}\n\
-	void getRows(float2x3 m, out float2 row[3])\n\
+	void getRows(float3x2 m, out float2 row[3])\n\
 	{\n\
 		row[0] = float2(m.col0.x, m.col1.x );\n\
 		row[1] = float2(m.col0.y, m.col1.y );\n\
 		row[2] = float2(m.col0.z, m.col1.z );\n\
 	}\n\
-	void getRows(float4x2 m, out float4 row[2])\n\
+	void getRows(float2x4 m, out float4 row[2])\n\
 	{\n\
 		row[0] = float4(m.col0.x, m.col1.x, m.col2.x, m.col3.x );\n\
 		row[1] = float4(m.col0.y, m.col1.y, m.col2.y, m.col3.y );\n\
@@ -372,192 +372,192 @@ static void initFullSource(std::string &fullSource)
 		row[0] = float2(m[0].x, m[1].x );\n\
 		row[1] = float2(m[0].y, m[1].y );\n\
 	}\n\
-	void getRows(float3x2 m, out float3 row[2])\n\
+	void getRows(float2x3 m, out float3 row[2])\n\
 	{\n\
 		row[0] = float3(m.col0.x, m.col1.x, m.col2.x );\n\
 		row[1] = float3(m.col0.y, m.col1.y, m.col2.y );\n\
 	}\n\
 	//---------scalar mul matrix---------------\n\
-	float2x3 __mulComp(float f, float2x3 m)\n\
-	{\n\
-		return float2x3(m.col0 * f, m.col1 * f);\n\
-	}\n\
 	float3x2 __mulComp(float f, float3x2 m)\n\
 	{\n\
-		return float3x2(m.col0 * f, m.col1 * f, m.col2 * f);\n\
+		return float3x2(m.col0 * f, m.col1 * f);\n\
 	}\n\
-	float3x4 __mulComp(float f, float3x4 m)\n\
+	float2x3 __mulComp(float f, float2x3 m)\n\
 	{\n\
-		return float3x4(m.col0 * f, m.col1 * f, m.col2 * f);\n\
+		return float2x3(m.col0 * f, m.col1 * f, m.col2 * f);\n\
 	}\n\
 	float4x3 __mulComp(float f, float4x3 m)\n\
 	{\n\
-		return float4x3(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
+		return float4x3(m.col0 * f, m.col1 * f, m.col2 * f);\n\
 	}\n\
-	float2x4 __mulComp(float f, float2x4 m)\n\
+	float3x4 __mulComp(float f, float3x4 m)\n\
 	{\n\
-		return float2x4(m.col0 * f, m.col1 * f);\n\
+		return float3x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
 	}\n\
 	float4x2 __mulComp(float f, float4x2 m)\n\
 	{\n\
-		return float4x2(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
+		return float4x2(m.col0 * f, m.col1 * f);\n\
+	}\n\
+	float2x4 __mulComp(float f, float2x4 m)\n\
+	{\n\
+		return float2x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
 	}\n\
 	//---------matrix mul scalar---------------\n\
-	float2x3 __mulComp(float2x3 m, float f)\n\
-	{\n\
-		return float2x3(m.col0 * f, m.col1 * f);\n\
-	}\n\
 	float3x2 __mulComp(float3x2 m, float f)\n\
 	{\n\
-		return float3x2(m.col0 * f, m.col1 * f, m.col2 * f);\n\
+		return float3x2(m.col0 * f, m.col1 * f);\n\
 	}\n\
-	float3x4 __mulComp(float3x4 m, float f)\n\
+	float2x3 __mulComp(float2x3 m, float f)\n\
 	{\n\
-		return float3x4(m.col0 * f, m.col1 * f, m.col2 * f);\n\
+		return float2x3(m.col0 * f, m.col1 * f, m.col2 * f);\n\
 	}\n\
 	float4x3 __mulComp(float4x3 m, float f)\n\
 	{\n\
-		return float4x3(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
+		return float4x3(m.col0 * f, m.col1 * f, m.col2 * f);\n\
 	}\n\
-	float2x4 __mulComp(float2x4 m, float f)\n\
+	float3x4 __mulComp(float3x4 m, float f)\n\
 	{\n\
-		return float2x4(m.col0 * f, m.col1 * f);\n\
+		return float3x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
 	}\n\
 	float4x2 __mulComp(float4x2 m, float f)\n\
 	{\n\
-		return float4x2(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
+		return float4x2(m.col0 * f, m.col1 * f);\n\
+	}\n\
+	float2x4 __mulComp(float2x4 m, float f)\n\
+	{\n\
+		return float2x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
 	}\n\
 	//---------matrix add scalar---------------\n\
-	float2x3 __addComp(float2x3 m, float f)\n\
-	{\n\
-		return float2x3(m.col0 + f, m.col1 + f);\n\
-	}\n\
 	float3x2 __addComp(float3x2 m, float f)\n\
 	{\n\
-		return float3x2(m.col0 + f, m.col1 + f, m.col2 + f);\n\
+		return float3x2(m.col0 + f, m.col1 + f);\n\
 	}\n\
-	float3x4 __addComp(float3x4 m, float f)\n\
+	float2x3 __addComp(float2x3 m, float f)\n\
 	{\n\
-		return float3x4(m.col0 + f, m.col1 + f, m.col2 + f);\n\
+		return float2x3(m.col0 + f, m.col1 + f, m.col2 + f);\n\
 	}\n\
 	float4x3 __addComp(float4x3 m, float f)\n\
 	{\n\
-		return float4x3(m.col0 + f, m.col1 + f, m.col2 + f, m.col3 + f);\n\
+		return float4x3(m.col0 + f, m.col1 + f, m.col2 + f);\n\
 	}\n\
-	float2x4 __addComp(float2x4 m, float f)\n\
+	float3x4 __addComp(float3x4 m, float f)\n\
 	{\n\
-		return float2x4(m.col0 + f, m.col1 + f);\n\
+		return float3x4(m.col0 + f, m.col1 + f, m.col2 + f, m.col3 + f);\n\
 	}\n\
 	float4x2 __addComp(float4x2 m, float f)\n\
 	{\n\
-		return float4x2(m.col0 + f, m.col1 + f, m.col2 + f, m.col3 + f);\n\
+		return float4x2(m.col0 + f, m.col1 + f);\n\
+	}\n\
+	float2x4 __addComp(float2x4 m, float f)\n\
+	{\n\
+		return float2x4(m.col0 + f, m.col1 + f, m.col2 + f, m.col3 + f);\n\
 	}\n\
 	//---------matrix add matrix component wise---------------\n\
-	float2x3 __addComp(float2x3 m, float2x3 m2)\n\
-	{\n\
-		return float2x3(m.col0 + m2.col0, m.col1 + m2.col1);\n\
-	}\n\
 	float3x2 __addComp(float3x2 m, float3x2 m2)\n\
 	{\n\
-		return float3x2(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2);\n\
+		return float3x2(m.col0 + m2.col0, m.col1 + m2.col1);\n\
 	}\n\
-	float3x4 __addComp(float3x4 m, float3x4 m2)\n\
+	float2x3 __addComp(float2x3 m, float2x3 m2)\n\
 	{\n\
-		return float3x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2);\n\
+		return float2x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2);\n\
 	}\n\
 	float4x3 __addComp(float4x3 m, float4x3 m2)\n\
 	{\n\
-		return float4x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3);\n\
+		return float4x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2);\n\
 	}\n\
-	float2x4 __addComp(float2x4 m, float2x4 m2)\n\
+	float3x4 __addComp(float3x4 m, float3x4 m2)\n\
 	{\n\
-		return float2x4(m.col0 + m2.col0, m.col1 + m2.col1);\n\
+		return float3x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3);\n\
 	}\n\
 	float4x2 __addComp(float4x2 m, float4x2 m2)\n\
 	{\n\
-		return float4x2(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3);\n\
+		return float4x2(m.col0 + m2.col0, m.col1 + m2.col1);\n\
+	}\n\
+	float2x4 __addComp(float2x4 m, float2x4 m2)\n\
+	{\n\
+		return float2x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3);\n\
 	}\n\
 	\n\
 	//---------matrix sub matrix component wise---------------\n\
-	float2x3 __subComp(float2x3 m, float2x3 m2)\n\
-	{\n\
-		return float2x3(m.col0 - m2.col0, m.col1 - m2.col1);\n\
-	}\n\
 	float3x2 __subComp(float3x2 m, float3x2 m2)\n\
 	{\n\
-		return float3x2(m.col0 - m2.col0, m.col1 - m2.col1, m.col2 - m2.col2);\n\
+		return float3x2(m.col0 - m2.col0, m.col1 - m2.col1);\n\
 	}\n\
-	float3x4 __subComp(float3x4 m, float3x4 m2)\n\
+	float2x3 __subComp(float2x3 m, float2x3 m2)\n\
 	{\n\
-		return float3x4(m.col0 - m2.col0, m.col1 - m2.col1, m.col2 - m2.col2);\n\
+		return float2x3(m.col0 - m2.col0, m.col1 - m2.col1, m.col2 - m2.col2);\n\
 	}\n\
 	float4x3 __subComp(float4x3 m, float4x3 m2)\n\
 	{\n\
-		return float4x3(m.col0 - m2.col0, m.col1 - m2.col1, m.col2 - m2.col2, m.col3 - m2.col3);\n\
+		return float4x3(m.col0 - m2.col0, m.col1 - m2.col1, m.col2 - m2.col2);\n\
 	}\n\
-	float2x4 __subComp(float2x4 m, float2x4 m2)\n\
+	float3x4 __subComp(float3x4 m, float3x4 m2)\n\
 	{\n\
-		return float2x4(m.col0 - m2.col0, m.col1 - m2.col1);\n\
+		return float3x4(m.col0 - m2.col0, m.col1 - m2.col1, m.col2 - m2.col2, m.col3 - m2.col3);\n\
 	}\n\
 	float4x2 __subComp(float4x2 m, float4x2 m2)\n\
 	{\n\
-		return float4x2(m.col0 - m2.col0, m.col1 - m2.col1, m.col2 - m2.col2, m.col3 - m2.col3);\n\
+		return float4x2(m.col0 - m2.col0, m.col1 - m2.col1);\n\
+	}\n\
+	float2x4 __subComp(float2x4 m, float2x4 m2)\n\
+	{\n\
+		return float2x4(m.col0 - m2.col0, m.col1 - m2.col1, m.col2 - m2.col2, m.col3 - m2.col3);\n\
 	}\n\
 	\n\
 	//-----------matrix mul matrix component wise--------------\n\
-	float2x3 __mulComp(float2x3 m, float2x3 m2)\n\
-	{\n\
-		return float2x3(m.col0 * m2.col0, m.col1 * m2.col1);\n\
-	}\n\
 	float3x2 __mulComp(float3x2 m, float3x2 m2)\n\
 	{\n\
-		return float3x2(m.col0 * m2.col0, m.col1 * m2.col1, m.col2 * m2.col2);\n\
+		return float3x2(m.col0 * m2.col0, m.col1 * m2.col1);\n\
 	}\n\
-	float3x4 __mulComp(float3x4 m, float3x4 m2)\n\
+	float2x3 __mulComp(float2x3 m, float2x3 m2)\n\
 	{\n\
-		return float3x4(m.col0 * m2.col0, m.col1 * m2.col1, m.col2 * m2.col2);\n\
+		return float2x3(m.col0 * m2.col0, m.col1 * m2.col1, m.col2 * m2.col2);\n\
 	}\n\
 	float4x3 __mulComp(float4x3 m, float4x3 m2)\n\
 	{\n\
-		return float4x3(m.col0 * m2.col0, m.col1 * m2.col1, m.col2 * m2.col2, m.col3 * m2.col3);\n\
+		return float4x3(m.col0 * m2.col0, m.col1 * m2.col1, m.col2 * m2.col2);\n\
 	}\n\
-	float2x4 __mulComp(float2x4 m, float2x4 m2)\n\
+	float3x4 __mulComp(float3x4 m, float3x4 m2)\n\
 	{\n\
-		return float2x4(m.col0 * m2.col0, m.col1 * m2.col1);\n\
+		return float3x4(m.col0 * m2.col0, m.col1 * m2.col1, m.col2 * m2.col2, m.col3 * m2.col3);\n\
 	}\n\
 	float4x2 __mulComp(float4x2 m, float4x2 m2)\n\
 	{\n\
-		return float4x2(m.col0 * m2.col0, m.col1 * m2.col1, m.col2 * m2.col2, m.col3 * m2.col3);\n\
+		return float4x2(m.col0 * m2.col0, m.col1 * m2.col1);\n\
+	}\n\
+	float2x4 __mulComp(float2x4 m, float2x4 m2)\n\
+	{\n\
+		return float2x4(m.col0 * m2.col0, m.col1 * m2.col1, m.col2 * m2.col2, m.col3 * m2.col3);\n\
 	}\n\
 	\n\
 	//---------matrix div matrix component wise---------------\n\
-	float2x3 __divComp(float2x3 m, float2x3 m2)\n\
-	{\n\
-		return float2x3(m.col0 / m2.col0, m.col1 / m2.col1);\n\
-	}\n\
 	float3x2 __divComp(float3x2 m, float3x2 m2)\n\
 	{\n\
-		return float3x2(m.col0 / m2.col0, m.col1 / m2.col1, m.col2 / m2.col2);\n\
+		return float3x2(m.col0 / m2.col0, m.col1 / m2.col1);\n\
 	}\n\
-	float3x4 __divComp(float3x4 m, float3x4 m2)\n\
+	float2x3 __divComp(float2x3 m, float2x3 m2)\n\
 	{\n\
-		return float3x4(m.col0 / m2.col0, m.col1 / m2.col1, m.col2 / m2.col2);\n\
+		return float2x3(m.col0 / m2.col0, m.col1 / m2.col1, m.col2 / m2.col2);\n\
 	}\n\
 	float4x3 __divComp(float4x3 m, float4x3 m2)\n\
 	{\n\
-		return float4x3(m.col0 / m2.col0, m.col1 / m2.col1, m.col2 / m2.col2, m.col3 / m2.col3);\n\
+		return float4x3(m.col0 / m2.col0, m.col1 / m2.col1, m.col2 / m2.col2);\n\
 	}\n\
-	float2x4 __divComp(float2x4 m, float2x4 m2)\n\
+	float3x4 __divComp(float3x4 m, float3x4 m2)\n\
 	{\n\
-		return float2x4(m.col0 / m2.col0, m.col1 / m2.col1);\n\
+		return float3x4(m.col0 / m2.col0, m.col1 / m2.col1, m.col2 / m2.col2, m.col3 / m2.col3);\n\
 	}\n\
 	float4x2 __divComp(float4x2 m, float4x2 m2)\n\
 	{\n\
-		return float4x2(m.col0 / m2.col0, m.col1 / m2.col1, m.col2 / m2.col2, m.col3 / m2.col3);\n\
+		return float4x2(m.col0 / m2.col0, m.col1 / m2.col1);\n\
+	}\n\
+	float2x4 __divComp(float2x4 m, float2x4 m2)\n\
+	{\n\
+		return float2x4(m.col0 / m2.col0, m.col1 / m2.col1, m.col2 / m2.col2, m.col3 / m2.col3);\n\
 	}\n\
 	\n\
 	//---------matrix mul vector---------------\n\
-	float2 mul(float2x3 m, float3 v)\n\
+	float2 mul (float3 v, float3x2 m)\n\
 	{\n\
 		float2 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -566,7 +566,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	float3 mul(float3x2 m, float2 v)\n\
+	float3 mul (float2 v, float2x3 m)\n\
 	{\n\
 		float3 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -576,7 +576,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	float3 mul(float3x4 m, float4 v)\n\
+	float3 mul (float4 v, float4x3 m)\n\
 	{\n\
 		float3 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -586,7 +586,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	float4 mul(float4x3 m, float3 v)\n\
+	float4 mul (float3 v, float3x4 m)\n\
 	{\n\
 		float4 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -597,7 +597,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	float2 mul(float2x4 m, float4 v)\n\
+	float2 mul (float4 v, float4x2 m)\n\
 	{\n\
 		float2 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -606,7 +606,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	float4 mul(float4x2 m, float2 v)\n\
+	float4 mul (float2 v, float2x4 m)\n\
 	{\n\
 		float4 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -622,7 +622,7 @@ static void initFullSource(std::string &fullSource)
 	{
 	fullSource +=
 	"//---------vector mul matrix---------------\n\
-	float2 mul(float3 v, float3x2 m)\n\
+	float2 mul (float2x3 m, float3 v)\n\
 	{\n\
 		float2 vec;\n\
 		\n\
@@ -635,7 +635,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	float3 mul(float2 v, float2x3 m)\n\
+	float3 mul (float3x2 m, float2 v)\n\
 	{\n\
 		float3 vec;\n\
 		\n\
@@ -649,7 +649,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	float3 mul(float4 v, float4x3 m)\n\
+	float3 mul (float3x4 m, float4 v)\n\
 	{\n\
 		float3 vec;\n\
 		\n\
@@ -663,7 +663,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	float4 mul(float3 v, float3x4 m)\n\
+	float4 mul (float4x3 m, float3 v)\n\
 	{\n\
 		float4 vec;\n\
 		\n\
@@ -678,7 +678,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	float2 mul(float4 v, float4x2 m)\n\
+	float2 mul (float2x4 m, float4 v)\n\
 	{\n\
 		float2 vec;\n\
 		\n\
@@ -691,7 +691,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	float4 mul(float2 v, float2x4 m)\n\
+	float4 mul (float4x2 m, float2 v)\n\
 	{\n\
 		float4 vec;\n\
 		\n\
@@ -708,9 +708,9 @@ static void initFullSource(std::string &fullSource)
 	\n\
 	//-----------transpose----------------\n\
 	\n\
-	float2x3 transpose (float3x2 m)\n\
+	float3x2 transpose (float2x3 m)\n\
 	{\n\
-		float2x3 result ;\n\
+		float3x2 result ;\n\
 		\n\
 		result.col0 = float3(m.col0.x, m.col1.x, m.col2.x );\n\
 		result.col1 = float3(m.col0.y, m.col1.y, m.col2.y );\n\
@@ -718,9 +718,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float3x2 transpose (float2x3 m)\n\
+	float2x3 transpose (float3x2 m)\n\
 	{\n\
-		float3x2 result ;\n\
+		float2x3 result ;\n\
 		\n\
 		result.col0 = float2(m.col0.x, m.col1.x );\n\
 		result.col1 = float2(m.col0.y, m.col1.y);\n\
@@ -729,9 +729,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float3x4 transpose (float4x3 m)\n\
+	float4x3 transpose (float3x4 m)\n\
 	{\n\
-		float3x4 result ;\n\
+		float4x3 result ;\n\
 		\n\
 		result.col0 = float4(m.col0.x, m.col1.x, m.col2.x, m.col3.x );\n\
 		result.col1 = float4(m.col0.y, m.col1.y, m.col2.y, m.col3.y );\n\
@@ -740,9 +740,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float4x3 transpose (float3x4 m)\n\
+	float3x4 transpose (float4x3 m)\n\
 	{\n\
-		float4x3 result ;\n\
+		float3x4 result ;\n\
 		\n\
 		result.col0 = float3(m.col0.x, m.col1.x, m.col2.x );\n\
 		result.col1 = float3(m.col0.y, m.col1.y, m.col2.y );\n\
@@ -752,9 +752,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float2x4 transpose (float4x2 m)\n\
+	float4x2 transpose (float2x4 m)\n\
 	{\n\
-		float2x4 result ;\n\
+		float4x2 result ;\n\
 		\n\
 		result.col0 = float4(m.col0.x, m.col1.x, m.col2.x, m.col3.x );\n\
 		result.col1 = float4(m.col0.y, m.col1.y, m.col2.y, m.col3.y );\n\
@@ -762,9 +762,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float4x2 transpose (float2x4 m)\n\
+	float2x4 transpose (float4x2 m)\n\
 	{\n\
-		float4x2 result ;\n\
+		float2x4 result ;\n\
 		\n\
 		result.col0 = float2(m.col0.x, m.col1.x );\n\
 		result.col1 = float2(m.col0.y, m.col1.y );\n\
@@ -776,7 +776,7 @@ static void initFullSource(std::string &fullSource)
 	\n\
 	//------------matrix multiplication---------\n\
 	\n\
-	float4x4 mul (float4x3 m1, float3x4 m2)\n\
+	float4x4 mul (float4x3 m2, float3x4 m1)\n\
 	{\n\
 		float4x4 result ;\n\
 		\n\
@@ -807,7 +807,7 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float3x3 mul (float3x4 m1, float4x3 m2)\n\
+	float3x3 mul (float3x4 m2, float4x3 m1)\n\
 	{\n\
 		float3x3 result ;\n\
 		\n\
@@ -830,7 +830,7 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float4x4 mul (float4x2 m1, float2x4 m2)\n\
+	float4x4 mul (float4x2 m2, float2x4 m1)\n\
 	{\n\
 		float4x4 result ;\n\
 		\n\
@@ -861,7 +861,7 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float2x2 mul (float2x4 m1, float4x2 m2)\n\
+	float2x2 mul (float2x4 m2, float4x2 m1)\n\
 	{\n\
 		float2x2 result ;\n\
 		\n\
@@ -878,9 +878,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float4x3 mul (float4x2 m1, float2x3 m2)\n\
+	float3x4 mul (float3x2 m2, float2x4 m1)\n\
 	{\n\
-		float4x3 result ;\n\
+		float3x4 result ;\n\
 		\n\
 		float2 row[3]; \n\
 		getRows(m2, row);\n\
@@ -905,9 +905,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float4x2 mul (float4x2 m1, float2x2 m2)\n\
+	float2x4 mul (float2x2 m2, float2x4 m1)\n\
 	{\n\
-		float4x2 result ;\n\
+		float2x4 result ;\n\
 		\n\
 		float2 row[2]; \n\
 		getRows(m2, row);\n\
@@ -928,9 +928,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float4x3 mul (float4x3 m1, float3x3 m2)\n\
+	float3x4 mul (float3x3 m2, float3x4 m1)\n\
 	{\n\
-		float4x3 result ;\n\
+		float3x4 result ;\n\
 		\n\
 		float3 row[3]; \n\
 		getRows(m2, row);\n\
@@ -951,9 +951,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float4x2 mul (float4x3 m1, float3x2 m2)\n\
+	float2x4 mul (float2x3 m2, float3x4 m1)\n\
 	{\n\
-		float4x2 result ;\n\
+		float2x4 result ;\n\
 		\n\
 		float3 row[2]; \n\
 		getRows(m2, row);\n\
@@ -974,9 +974,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float3x4 mul (float3x4 m1, float4x4 m2)\n\
+	float4x3 mul (float4x4 m2, float4x3 m1)\n\
 	{\n\
-		float3x4 result ;\n\
+		float4x3 result ;\n\
 		\n\
 		float4 row[4]; \n\
 		getRows(m2, row);\n\
@@ -1000,9 +1000,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float3x2 mul (float3x4 m1, float4x2 m2)\n\
+	float2x3 mul (float2x4 m2, float4x3 m1)\n\
 	{\n\
-		float3x2 result ;\n\
+		float2x3 result ;\n\
 		\n\
 		float4 row[2]; \n\
 		getRows(m2, row);\n\
@@ -1020,9 +1020,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float2x4 mul (float2x3 m1, float3x4 m2)\n\
+	float4x2 mul (float4x3 m2, float3x2 m1)\n\
 	{\n\
-		float2x4 result ;\n\
+		float4x2 result ;\n\
 		\n\
 		float3 row[4]; \n\
 		getRows(m2, row);\n\
@@ -1041,9 +1041,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float2x3 mul (float2x3 m1, float3x3 m2)\n\
+	float3x2 mul (float3x3 m2, float3x2 m1)\n\
 	{\n\
-		float2x3 result ;\n\
+		float3x2 result ;\n\
 		\n\
 		float3 row[3]; \n\
 		getRows(m2, row);\n\
@@ -1060,9 +1060,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float3x4 mul (float3x2 m1, float2x4 m2)\n\
+	float4x3 mul (float4x2 m2, float2x3 m1)\n\
 	{\n\
-		float3x4 result ;\n\
+		float4x3 result ;\n\
 		\n\
 		float2 row[4]; \n\
 		getRows(m2, row);\n\
@@ -1086,9 +1086,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float3x2 mul (float3x2 m1, float2x2 m2)\n\
+	float2x3 mul (float2x2 m2, float2x3 m1)\n\
 	{\n\
-		float3x2 result ;\n\
+		float2x3 result ;\n\
 		\n\
 		float2 row[2]; \n\
 		getRows(m2, row);\n\
@@ -1106,9 +1106,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float2x4 mul (float2x4 m1, float4x4 m2)\n\
+	float4x2 mul (float4x4 m2, float4x2 m1)\n\
 	{\n\
-		float2x4 result ;\n\
+		float4x2 result ;\n\
 		\n\
 		float4 row[4]; \n\
 		getRows(m2, row);\n\
@@ -1127,9 +1127,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float2x3 mul (float2x4 m1, float4x3 m2)\n\
+	float3x2 mul (float3x4 m2, float4x2 m1)\n\
 	{\n\
-		float2x3 result ;\n\
+		float3x2 result ;\n\
 		\n\
 		float4 row[3]; \n\
 		getRows(m2, row);\n\
@@ -1146,9 +1146,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float4x3 mul (float4x4 m1, float4x3 m2)\n\
+	float3x4 mul (float3x4 m2, float4x4 m1)\n\
 	{\n\
-		float4x3 result ;\n\
+		float3x4 result ;\n\
 		\n\
 		float4 row[3]; \n\
 		getRows(m2, row);\n\
@@ -1173,9 +1173,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float4x2 mul (float4x4 m1, float4x2 m2)\n\
+	float2x4 mul (float2x4 m2, float4x4 m1)\n\
 	{\n\
-		float4x2 result ;\n\
+		float2x4 result ;\n\
 		\n\
 		float4 row[2]; \n\
 		getRows(m2, row);\n\
@@ -1196,9 +1196,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float3x4 mul (float3x3 m1, float3x4 m2)\n\
+	float4x3 mul (float4x3 m2, float3x3 m1)\n\
 	{\n\
-		float3x4 result ;\n\
+		float4x3 result ;\n\
 		\n\
 		float3 row[4]; \n\
 		getRows(m2, row);\n\
@@ -1222,9 +1222,9 @@ static void initFullSource(std::string &fullSource)
 		return result;\n\
 	}\n\
 	\n\
-	float3x2 mul (float3x3 m1, float3x2 m2)\n\
+	float2x3 mul (float2x3 m2, float3x3 m1)\n\
 	{\n\
-		float3x2 result ;\n\
+		float2x3 result ;\n\
 		\n\
 		float3 row[2]; \n\
 		getRows(m2, row);\n\
@@ -1241,9 +1241,9 @@ static void initFullSource(std::string &fullSource)
 						\n\
 		return result;\n\
 	}\n\
-	float2x4 mul (float2x2 m1, float2x4 m2)\n\
+	float4x2 mul (float4x2 m2, float2x2 m1)\n\
 	{\n\
-		float2x4 result ;\n\
+		float4x2 result ;\n\
 		\n\
 		float2 row[4]; \n\
 		getRows(m2, row);\n\
@@ -1261,9 +1261,9 @@ static void initFullSource(std::string &fullSource)
 						\n\
 		return result;\n\
 	}\n\
-	float2x3 mul (float2x2 m1, float2x3 m2)\n\
+	float3x2 mul (float3x2 m2, float2x2 m1)\n\
 	{\n\
-		float2x3 result ;\n\
+		float3x2 result ;\n\
 		\n\
 		float2 row[3]; \n\
 		getRows(m2, row);\n\
@@ -1283,43 +1283,43 @@ static void initFullSource(std::string &fullSource)
 	{
 	fullSource += 
 #if 1
-		"#define half2x3 float2x3\n\
-		#define half3x2 float3x2\n\
-		#define half3x4 float3x4\n\
+		"#define half3x2 float3x2\n\
+		#define half2x3 float2x3\n\
 		#define half4x3 float4x3\n\
-		#define half2x4 float2x4\n\
+		#define half3x4 float3x4\n\
 		#define half4x2 float4x2\n\
+		#define half2x4 float2x4\n\
 		\n\
-		#define fixed2x3 float2x3\n\
 		#define fixed3x2 float3x2\n\
-		#define fixed3x4 float3x4\n\
+		#define fixed2x3 float2x3\n\
 		#define fixed4x3 float4x3\n\
-		#define fixed2x4 float2x4\n\
+		#define fixed3x4 float3x4\n\
 		#define fixed4x2 float4x2\n\
+		#define fixed2x4 float2x4\n\
 		#line 1\n";
 #else
 	"//-----------------half--------------------\n\
-	struct half2x3\n\
+	struct half3x2\n\
 	{\n\
 		half3 col0;\n\
 		half3 col1;\n\
 	};\n\
 	\n\
-	struct half3x2\n\
+	struct half2x3\n\
 	{\n\
 		half2 col0;\n\
 		half2 col1;\n\
 		half2 col2;\n\
 	};\n\
 	\n\
-	struct half3x4\n\
+	struct half4x3\n\
 	{\n\
 		half4 col0;\n\
 		half4 col1;\n\
 		half4 col2;\n\
 	};\n\
 	\n\
-	struct half4x3\n\
+	struct half3x4\n\
 	{\n\
 		half3 col0;\n\
 		half3 col1;\n\
@@ -1327,13 +1327,13 @@ static void initFullSource(std::string &fullSource)
 		half3 col3;\n\
 	};\n\
 	\n\
-	struct half2x4\n\
+	struct half4x2\n\
 	{\n\
 		half4 col0;\n\
 		half4 col1;\n\
 	};\n\
 	\n\
-	struct half4x2\n\
+	struct half2x4\n\
 	{\n\
 		half2 col0;\n\
 		half2 col1;\n\
@@ -1341,7 +1341,7 @@ static void initFullSource(std::string &fullSource)
 		half2 col3;\n\
 	};\n\
 	\n\
-	half2 mul(half2x3 m, half3 v)\n\
+	half2 mul (half3 v, half3x2 m)\n\
 	{\n\
 		half2 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -1350,7 +1350,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	half3 mul(half3x2 m, half2 v)\n\
+	half3 mul (half2 v, half2x3 m)\n\
 	{\n\
 		half3 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -1360,7 +1360,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	half3 mul(half3x4 m, half4 v)\n\
+	half3 mul (half4 v, half4x3 m)\n\
 	{\n\
 		half3 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -1370,7 +1370,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	half4 mul(half4x3 m, half3 v)\n\
+	half4 mul (half3 v, half3x4 m)\n\
 	{\n\
 		half4 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -1381,7 +1381,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	half2 mul(half2x4 m, half4 v)\n\
+	half2 mul (half4 v, half4x2 m)\n\
 	{\n\
 		half2 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -1390,7 +1390,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	half4 mul(half4x2 m, half2 v)\n\
+	half4 mul (half2 v, half2x4 m)\n\
 	{\n\
 		half4 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -1401,132 +1401,132 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	//---------scalar mul matrix---------------\n\
-	half2x3 mul(half f, half2x3 m)\n\
-	{\n\
-		return half2x3(m.col0 * f, m.col1 * f);\n\
-	}\n\
 	half3x2 mul(half f, half3x2 m)\n\
 	{\n\
-		return half3x2(m.col0 * f, m.col1 * f, m.col2 * f);\n\
+		return half3x2(m.col0 * f, m.col1 * f);\n\
 	}\n\
-	half3x4 mul(half f, half3x4 m)\n\
+	half2x3 mul(half f, half2x3 m)\n\
 	{\n\
-		return half3x4(m.col0 * f, m.col1 * f, m.col2 * f);\n\
+		return half2x3(m.col0 * f, m.col1 * f, m.col2 * f);\n\
 	}\n\
 	half4x3 mul(half f, half4x3 m)\n\
 	{\n\
-		return half4x3(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
+		return half4x3(m.col0 * f, m.col1 * f, m.col2 * f);\n\
 	}\n\
-	half2x4 mul(half f, half2x4 m)\n\
+	half3x4 mul(half f, half3x4 m)\n\
 	{\n\
-		return half2x4(m.col0 * f, m.col1 * f);\n\
+		return half3x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
 	}\n\
 	half4x2 mul(half f, half4x2 m)\n\
 	{\n\
-		return half4x2(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
+		return half4x2(m.col0 * f, m.col1 * f);\n\
+	}\n\
+	half2x4 mul(half f, half2x4 m)\n\
+	{\n\
+		return half2x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
 	}\n\
 	//---------matrix mul scalar---------------\n\
-	half2x3 mul(half2x3 m, half f)\n\
-	{\n\
-		return half2x3(m.col0 * f, m.col1 * f);\n\
-	}\n\
 	half3x2 mul(half3x2 m, half f)\n\
 	{\n\
-		return half3x2(m.col0 * f, m.col1 * f, m.col2 * f);\n\
+		return half3x2(m.col0 * f, m.col1 * f);\n\
 	}\n\
-	half3x4 mul(half3x4 m, half f)\n\
+	half2x3 mul(half2x3 m, half f)\n\
 	{\n\
-		return half3x4(m.col0 * f, m.col1 * f, m.col2 * f);\n\
+		return half2x3(m.col0 * f, m.col1 * f, m.col2 * f);\n\
 	}\n\
 	half4x3 mul(half4x3 m, half f)\n\
 	{\n\
-		return half4x3(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
+		return half4x3(m.col0 * f, m.col1 * f, m.col2 * f);\n\
 	}\n\
-	half2x4 mul(half2x4 m, half f)\n\
+	half3x4 mul(half3x4 m, half f)\n\
 	{\n\
-		return half2x4(m.col0 * f, m.col1 * f);\n\
+		return half3x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
 	}\n\
 	half4x2 mul(half4x2 m, half f)\n\
 	{\n\
-		return half4x2(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
+		return half4x2(m.col0 * f, m.col1 * f);\n\
+	}\n\
+	half2x4 mul(half2x4 m, half f)\n\
+	{\n\
+		return half2x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
 	}\n\
 	\n\
-	half2x3 mulAssign(inout half2x3 m, half f)\n\
-	{\n\
-		m = half2x3(m.col0 * f, m.col1 * f); return m;\n\
-	}\n\
 	half3x2 mulAssign(inout half3x2 m, half f)\n\
 	{\n\
-		m = half3x2(m.col0 * f, m.col1 * f, m.col2 * f); return m;\n\
+		m = half3x2(m.col0 * f, m.col1 * f); return m;\n\
 	}\n\
-	half3x4 mulAssign(inout half3x4 m, half f)\n\
+	half2x3 mulAssign(inout half2x3 m, half f)\n\
 	{\n\
-		m = half3x4(m.col0 * f, m.col1 * f, m.col2 * f); return m;\n\
+		m = half2x3(m.col0 * f, m.col1 * f, m.col2 * f); return m;\n\
 	}\n\
 	half4x3 mulAssign(inout half4x3 m, half f)\n\
 	{\n\
-		m = half4x3(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f); return m;\n\
+		m = half4x3(m.col0 * f, m.col1 * f, m.col2 * f); return m;\n\
 	}\n\
-	half2x4 mulAssign(inout half2x4 m, half f)\n\
+	half3x4 mulAssign(inout half3x4 m, half f)\n\
 	{\n\
-		m = half2x4(m.col0 * f, m.col1 * f); return m;\n\
+		m = half3x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f); return m;\n\
 	}\n\
 	half4x2 mulAssign(inout half4x2 m, half f)\n\
 	{\n\
-		m = half4x2(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f); return m;\n\
+		m = half4x2(m.col0 * f, m.col1 * f); return m;\n\
+	}\n\
+	half2x4 mulAssign(inout half2x4 m, half f)\n\
+	{\n\
+		m = half2x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f); return m;\n\
 	}\n\
 	//---------matrix add matrix---------------\n\
-	half2x3 add(half2x3 m, half2x3 m2)\n\
-	{\n\
-		return half2x3(m.col0 + m2.col0, m.col1 + m2.col1);\n\
-	}\n\
 	half3x2 add(half3x2 m, half3x2 m2)\n\
 	{\n\
-		return half3x2(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2);\n\
+		return half3x2(m.col0 + m2.col0, m.col1 + m2.col1);\n\
 	}\n\
-	half3x4 add(half3x4 m, half3x4 m2)\n\
+	half2x3 add(half2x3 m, half2x3 m2)\n\
 	{\n\
-		return half3x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2);\n\
+		return half2x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2);\n\
 	}\n\
 	half4x3 add(half4x3 m, half4x3 m2)\n\
 	{\n\
-		return half4x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3);\n\
+		return half4x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2);\n\
 	}\n\
-	half2x4 add(half2x4 m, half2x4 m2)\n\
+	half3x4 add(half3x4 m, half3x4 m2)\n\
 	{\n\
-		return half2x4(m.col0 + m2.col0, m.col1 + m2.col1);\n\
+		return half3x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3);\n\
 	}\n\
 	half4x2 add(half4x2 m, half4x2 m2)\n\
 	{\n\
-		return half4x2(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3);\n\
+		return half4x2(m.col0 + m2.col0, m.col1 + m2.col1);\n\
+	}\n\
+	half2x4 add(half2x4 m, half2x4 m2)\n\
+	{\n\
+		return half2x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3);\n\
 	}\n\
 	\n\
-	half2x3 addAssign(inout half2x3 m, half2x3 m2)\n\
-	{\n\
-		m = half2x3(m.col0 + m2.col0, m.col1 + m2.col1); return m;\n\
-	}\n\
 	half3x2 addAssign(inout half3x2 m, half3x2 m2)\n\
 	{\n\
-		m = half3x2(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2); return m;\n\
+		m = half3x2(m.col0 + m2.col0, m.col1 + m2.col1); return m;\n\
 	}\n\
-	half3x4 addAssign(inout half3x4 m, half3x4 m2)\n\
+	half2x3 addAssign(inout half2x3 m, half2x3 m2)\n\
 	{\n\
-		m = half3x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2); return m;\n\
+		m = half2x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2); return m;\n\
 	}\n\
 	half4x3 addAssign(inout half4x3 m, half4x3 m2)\n\
 	{\n\
-		m = half4x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3); return m;\n\
+		m = half4x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2); return m;\n\
 	}\n\
-	half2x4 addAssign(inout half2x4 m, half2x4 m2)\n\
+	half3x4 addAssign(inout half3x4 m, half3x4 m2)\n\
 	{\n\
-		m = half2x4(m.col0 + m2.col0, m.col1 + m2.col1); return m;\n\
+		m = half3x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3); return m;\n\
 	}\n\
 	half4x2 addAssign(inout half4x2 m, half4x2 m2)\n\
 	{\n\
-		m = half4x2(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3); return m;\n\
+		m = half4x2(m.col0 + m2.col0, m.col1 + m2.col1); return m;\n\
+	}\n\
+	half2x4 addAssign(inout half2x4 m, half2x4 m2)\n\
+	{\n\
+		m = half2x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3); return m;\n\
 	}\n\
 	//---------vector mul matrix---------------\n\
-	half2 mul(half3 v, half3x2 m)\n\
+	half2 mul (half2x3 m, half3 v)\n\
 	{\n\
 		half2 vec;\n\
 		\n\
@@ -1539,7 +1539,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	half3 mul(half2 v, half2x3 m)\n\
+	half3 mul (half3x2 m, half2 v)\n\
 	{\n\
 		half3 vec;\n\
 		\n\
@@ -1554,7 +1554,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	half3 mul(half4 v, half4x3 m)\n\
+	half3 mul (half3x4 m, half4 v)\n\
 	{\n\
 		half3 vec;\n\
 		\n\
@@ -1569,7 +1569,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	half4 mul(half3 v, half3x4 m)\n\
+	half4 mul (half4x3 m, half3 v)\n\
 	{\n\
 		half4 vec;\n\
 		\n\
@@ -1586,7 +1586,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	half2 mul(half4 v, half4x2 m)\n\
+	half2 mul (half2x4 m, half4 v)\n\
 	{\n\
 		half2 vec;\n\
 		\n\
@@ -1599,7 +1599,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	half4 mul(half2 v, half2x4 m)\n\
+	half4 mul (half4x2 m, half2 v)\n\
 	{\n\
 		half4 vec;\n\
 		\n\
@@ -1617,27 +1617,27 @@ static void initFullSource(std::string &fullSource)
 	}\n\
 	\n\
 	//-----------------fixed--------------------\n\
-	struct fixed2x3\n\
+	struct fixed3x2\n\
 	{\n\
 		fixed3 col0;\n\
 		fixed3 col1;\n\
 	};\n\
 	\n\
-	struct fixed3x2\n\
+	struct fixed2x3\n\
 	{\n\
 		fixed2 col0;\n\
 		fixed2 col1;\n\
 		fixed2 col2;\n\
 	};\n\
 	\n\
-	struct fixed3x4\n\
+	struct fixed4x3\n\
 	{\n\
 		fixed4 col0;\n\
 		fixed4 col1;\n\
 		fixed4 col2;\n\
 	};\n\
 	\n\
-	struct fixed4x3\n\
+	struct fixed3x4\n\
 	{\n\
 		fixed3 col0;\n\
 		fixed3 col1;\n\
@@ -1645,13 +1645,13 @@ static void initFullSource(std::string &fullSource)
 		fixed3 col3;\n\
 	};\n\
 	\n\
-	struct fixed2x4\n\
+	struct fixed4x2\n\
 	{\n\
 		fixed4 col0;\n\
 		fixed4 col1;\n\
 	};\n\
 	\n\
-	struct fixed4x2\n\
+	struct fixed2x4\n\
 	{\n\
 		fixed2 col0;\n\
 		fixed2 col1;\n\
@@ -1659,132 +1659,132 @@ static void initFullSource(std::string &fullSource)
 		fixed2 col3;\n\
 	};\n\
 	//---------scalar mul matrix---------------\n\
-	fixed2x3 mul(fixed f, fixed2x3 m)\n\
-	{\n\
-		return fixed2x3(m.col0 * f, m.col1 * f);\n\
-	}\n\
 	fixed3x2 mul(fixed f, fixed3x2 m)\n\
 	{\n\
-		return fixed3x2(m.col0 * f, m.col1 * f, m.col2 * f);\n\
+		return fixed3x2(m.col0 * f, m.col1 * f);\n\
 	}\n\
-	fixed3x4 mul(fixed f, fixed3x4 m)\n\
+	fixed2x3 mul(fixed f, fixed2x3 m)\n\
 	{\n\
-		return fixed3x4(m.col0 * f, m.col1 * f, m.col2 * f);\n\
+		return fixed2x3(m.col0 * f, m.col1 * f, m.col2 * f);\n\
 	}\n\
 	fixed4x3 mul(fixed f, fixed4x3 m)\n\
 	{\n\
-		return fixed4x3(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
+		return fixed4x3(m.col0 * f, m.col1 * f, m.col2 * f);\n\
 	}\n\
-	fixed2x4 mul(fixed f, fixed2x4 m)\n\
+	fixed3x4 mul(fixed f, fixed3x4 m)\n\
 	{\n\
-		return fixed2x4(m.col0 * f, m.col1 * f);\n\
+		return fixed3x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
 	}\n\
 	fixed4x2 mul(fixed f, fixed4x2 m)\n\
 	{\n\
-		return fixed4x2(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
+		return fixed4x2(m.col0 * f, m.col1 * f);\n\
+	}\n\
+	fixed2x4 mul(fixed f, fixed2x4 m)\n\
+	{\n\
+		return fixed2x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
 	}\n\
 	//---------matrix mul scalar---------------\n\
-	fixed2x3 mul(fixed2x3 m, fixed f)\n\
-	{\n\
-		return fixed2x3(m.col0 * f, m.col1 * f);\n\
-	}\n\
 	fixed3x2 mul(fixed3x2 m, fixed f)\n\
 	{\n\
-		return fixed3x2(m.col0 * f, m.col1 * f, m.col2 * f);\n\
+		return fixed3x2(m.col0 * f, m.col1 * f);\n\
 	}\n\
-	fixed3x4 mul(fixed3x4 m, fixed f)\n\
+	fixed2x3 mul(fixed2x3 m, fixed f)\n\
 	{\n\
-		return fixed3x4(m.col0 * f, m.col1 * f, m.col2 * f);\n\
+		return fixed2x3(m.col0 * f, m.col1 * f, m.col2 * f);\n\
 	}\n\
 	fixed4x3 mul(fixed4x3 m, fixed f)\n\
 	{\n\
-		return fixed4x3(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
+		return fixed4x3(m.col0 * f, m.col1 * f, m.col2 * f);\n\
 	}\n\
-	fixed2x4 mul(fixed2x4 m, fixed f)\n\
+	fixed3x4 mul(fixed3x4 m, fixed f)\n\
 	{\n\
-		return fixed2x4(m.col0 * f, m.col1 * f);\n\
+		return fixed3x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
 	}\n\
 	fixed4x2 mul(fixed4x2 m, fixed f)\n\
 	{\n\
-		return fixed4x2(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
+		return fixed4x2(m.col0 * f, m.col1 * f);\n\
+	}\n\
+	fixed2x4 mul(fixed2x4 m, fixed f)\n\
+	{\n\
+		return fixed2x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f);\n\
 	}\n\
 	\n\
-	fixed2x3 mulAssign(inout fixed2x3 m, fixed f)\n\
-	{\n\
-		m = fixed2x3(m.col0 * f, m.col1 * f); return m;\n\
-	}\n\
 	fixed3x2 mulAssign(inout fixed3x2 m, fixed f)\n\
 	{\n\
-		m = fixed3x2(m.col0 * f, m.col1 * f, m.col2 * f); return m;\n\
+		m = fixed3x2(m.col0 * f, m.col1 * f); return m;\n\
 	}\n\
-	fixed3x4 mulAssign(inout fixed3x4 m, fixed f)\n\
+	fixed2x3 mulAssign(inout fixed2x3 m, fixed f)\n\
 	{\n\
-		m = fixed3x4(m.col0 * f, m.col1 * f, m.col2 * f); return m;\n\
+		m = fixed2x3(m.col0 * f, m.col1 * f, m.col2 * f); return m;\n\
 	}\n\
 	fixed4x3 mulAssign(inout fixed4x3 m, fixed f)\n\
 	{\n\
-		m = fixed4x3(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f); return m;\n\
+		m = fixed4x3(m.col0 * f, m.col1 * f, m.col2 * f); return m;\n\
 	}\n\
-	fixed2x4 mulAssign(inout fixed2x4 m, fixed f)\n\
+	fixed3x4 mulAssign(inout fixed3x4 m, fixed f)\n\
 	{\n\
-		m = fixed2x4(m.col0 * f, m.col1 * f); return m;\n\
+		m = fixed3x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f); return m;\n\
 	}\n\
 	fixed4x2 mulAssign(inout fixed4x2 m, fixed f)\n\
 	{\n\
-		m = fixed4x2(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f); return m;\n\
+		m = fixed4x2(m.col0 * f, m.col1 * f); return m;\n\
+	}\n\
+	fixed2x4 mulAssign(inout fixed2x4 m, fixed f)\n\
+	{\n\
+		m = fixed2x4(m.col0 * f, m.col1 * f, m.col2 * f, m.col3 * f); return m;\n\
 	}\n\
 	//---------matrix add matrix---------------\n\
-	fixed2x3 add(fixed2x3 m, fixed2x3 m2)\n\
-	{\n\
-		return fixed2x3(m.col0 + m2.col0, m.col1 + m2.col1);\n\
-	}\n\
 	fixed3x2 add(fixed3x2 m, fixed3x2 m2)\n\
 	{\n\
-		return fixed3x2(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2);\n\
+		return fixed3x2(m.col0 + m2.col0, m.col1 + m2.col1);\n\
 	}\n\
-	fixed3x4 add(fixed3x4 m, fixed3x4 m2)\n\
+	fixed2x3 add(fixed2x3 m, fixed2x3 m2)\n\
 	{\n\
-		return fixed3x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2);\n\
+		return fixed2x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2);\n\
 	}\n\
 	fixed4x3 add(fixed4x3 m, fixed4x3 m2)\n\
 	{\n\
-		return fixed4x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3);\n\
+		return fixed4x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2);\n\
 	}\n\
-	fixed2x4 add(fixed2x4 m, fixed2x4 m2)\n\
+	fixed3x4 add(fixed3x4 m, fixed3x4 m2)\n\
 	{\n\
-		return fixed2x4(m.col0 + m2.col0, m.col1 + m2.col1);\n\
+		return fixed3x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3);\n\
 	}\n\
 	fixed4x2 add(fixed4x2 m, fixed4x2 m2)\n\
 	{\n\
-		return fixed4x2(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3);\n\
+		return fixed4x2(m.col0 + m2.col0, m.col1 + m2.col1);\n\
+	}\n\
+	fixed2x4 add(fixed2x4 m, fixed2x4 m2)\n\
+	{\n\
+		return fixed2x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3);\n\
 	}\n\
 	\n\
-	fixed2x3 addAssign(inout fixed2x3 m, fixed2x3 m2)\n\
-	{\n\
-		m = fixed2x3(m.col0 + m2.col0, m.col1 + m2.col1); return m;\n\
-	}\n\
 	fixed3x2 addAssign(inout fixed3x2 m, fixed3x2 m2)\n\
 	{\n\
-		m = fixed3x2(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2); return m;\n\
+		m = fixed3x2(m.col0 + m2.col0, m.col1 + m2.col1); return m;\n\
 	}\n\
-	fixed3x4 addAssign(inout fixed3x4 m, fixed3x4 m2)\n\
+	fixed2x3 addAssign(inout fixed2x3 m, fixed2x3 m2)\n\
 	{\n\
-		m = fixed3x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2); return m;\n\
+		m = fixed2x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2); return m;\n\
 	}\n\
 	fixed4x3 addAssign(inout fixed4x3 m, fixed4x3 m2)\n\
 	{\n\
-		m = fixed4x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3); return m;\n\
+		m = fixed4x3(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2); return m;\n\
 	}\n\
-	fixed2x4 addAssign(inout fixed2x4 m, fixed2x4 m2)\n\
+	fixed3x4 addAssign(inout fixed3x4 m, fixed3x4 m2)\n\
 	{\n\
-		m = fixed2x4(m.col0 + m2.col0, m.col1 + m2.col1); return m;\n\
+		m = fixed3x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3); return m;\n\
 	}\n\
 	fixed4x2 addAssign(inout fixed4x2 m, fixed4x2 m2)\n\
 	{\n\
-		m = fixed4x2(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3); return m;\n\
+		m = fixed4x2(m.col0 + m2.col0, m.col1 + m2.col1); return m;\n\
+	}\n\
+	fixed2x4 addAssign(inout fixed2x4 m, fixed2x4 m2)\n\
+	{\n\
+		m = fixed2x4(m.col0 + m2.col0, m.col1 + m2.col1, m.col2 + m2.col2, m.col3 + m2.col3); return m;\n\
 	}\n\
 	//-----------matrix mul vector-------------------\n\
-	fixed2 mul(fixed2x3 m, fixed3 v)\n\
+	fixed2 mul (fixed3 v, fixed3x2 m)\n\
 	{\n\
 		fixed2 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -1793,7 +1793,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	fixed3 mul(fixed3x2 m, fixed2 v)\n\
+	fixed3 mul (fixed2 v, fixed2x3 m)\n\
 	{\n\
 		fixed3 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -1803,7 +1803,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	fixed3 mul(fixed3x4 m, fixed4 v)\n\
+	fixed3 mul (fixed4 v, fixed4x3 m)\n\
 	{\n\
 		fixed3 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -1813,7 +1813,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	fixed4 mul(fixed4x3 m, fixed3 v)\n\
+	fixed4 mul (fixed3 v, fixed3x4 m)\n\
 	{\n\
 		fixed4 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -1824,7 +1824,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	fixed2 mul(fixed2x4 m, fixed4 v)\n\
+	fixed2 mul (fixed4 v, fixed4x2 m)\n\
 	{\n\
 		fixed2 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -1833,7 +1833,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	fixed4 mul(fixed4x2 m, fixed2 v)\n\
+	fixed4 mul (fixed2 v, fixed2x4 m)\n\
 	{\n\
 		fixed4 vec;\n\
 		vec.x = dot(m.col0, v);\n\
@@ -1845,7 +1845,7 @@ static void initFullSource(std::string &fullSource)
 	}\n\
 	\n\
 	//---------vector mul matrix---------------\n\
-	fixed2 mul(fixed3 v, fixed3x2 m)\n\
+	fixed2 mul (fixed2x3 m, fixed3 v)\n\
 	{\n\
 		fixed2 vec;\n\
 		\n\
@@ -1858,7 +1858,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	fixed3 mul(fixed2 v, fixed2x3 m)\n\
+	fixed3 mul (fixed3x2 m, fixed2 v)\n\
 	{\n\
 		fixed3 vec;\n\
 		\n\
@@ -1873,7 +1873,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	fixed3 mul(fixed4 v, fixed4x3 m)\n\
+	fixed3 mul (fixed3x4 m, fixed4 v)\n\
 	{\n\
 		fixed3 vec;\n\
 		\n\
@@ -1888,7 +1888,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	fixed4 mul(fixed3 v, fixed3x4 m)\n\
+	fixed4 mul (fixed4x3 m, fixed3 v)\n\
 	{\n\
 		fixed4 vec;\n\
 		\n\
@@ -1905,7 +1905,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	fixed2 mul(fixed4 v, fixed4x2 m)\n\
+	fixed2 mul (fixed2x4 m, fixed4 v)\n\
 	{\n\
 		fixed2 vec;\n\
 		\n\
@@ -1918,7 +1918,7 @@ static void initFullSource(std::string &fullSource)
 		return vec;\n\
 	}\n\
 	\n\
-	fixed4 mul(fixed2 v, fixed2x4 m)\n\
+	fixed4 mul (fixed4x2 m, fixed2 v)\n\
 	{\n\
 		fixed4 vec;\n\
 		\n\
