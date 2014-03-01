@@ -1133,6 +1133,23 @@ bool HlslLinker::emitReturnValue(const EGlslSymbolType retType, GlslFunction* fu
 	assert (retType != EgstVoid);
 	if (retType != EgstStruct)
 	{
+		if (lang == EShLangFragment){
+			if (this->targetVersion == ETargetGLSL_ES_100)
+			{
+				EAttribSemantic sem = parseAttributeSemantic(funcMain->getSemantic());
+				const char* varNameOut = resultString[sem];
+				//check for out of range gl_FragData
+				if (strncmp(varNameOut, "gl_FragData", 11) == 0)
+				{
+					if (varNameOut[12] != '0')//glsl es 1.00 only support one render target
+					{
+						infoSink.info << "Unsupported multiple output targets in GLSL ES 1.00 fragment shader\n";
+						return false;
+					}
+				}
+			}
+		}
+
 		std::string name, ctor;
 		int pad;
 		
@@ -1178,6 +1195,22 @@ bool HlslLinker::emitReturnValue(const EGlslSymbolType retType, GlslFunction* fu
 			{
 				arraySize = current.arraySize;
 				isArray = true;
+			}
+		}
+		else if (lang == EShLangFragment){
+			if (this->targetVersion == ETargetGLSL_ES_100)
+			{
+				EAttribSemantic sem = parseAttributeSemantic(current.semantic);
+				const char* varNameOut = resultString[sem];
+				//check for out of range gl_FragData
+				if (strncmp(varNameOut, "gl_FragData", 11) == 0)
+				{
+					if (varNameOut[12] != '0')//glsl es 1.00 only support one render target
+					{
+						infoSink.info << "Unsupported multiple output targets in GLSL ES 1.00 fragment shader\n";
+						return false;
+					}
+				}
 			}
 		}
 		
