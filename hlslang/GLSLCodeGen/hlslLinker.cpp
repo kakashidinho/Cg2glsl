@@ -14,6 +14,12 @@
 #include <string.h>
 #include <set>
 
+static const char* kTargetVersionNumberStrings[ETargetVersionCount] = {
+	"ES 1.00", // ES 1.00
+	"1.10", // 1.10
+	"1.20", // 1.20
+};
+
 static const char* kTargetVersionStrings[ETargetVersionCount] = {
 	"", // ES 1.00
 	"", // 1.10
@@ -672,8 +678,9 @@ bool HlslLinker::linkerSanityCheck(HlslCrossCompiler* compiler, const char* entr
 }
 
 
-bool HlslLinker::buildFunctionLists(HlslCrossCompiler* comp, EShLanguage lang, const std::string& entryPoint, GlslFunction*& globalFunction, std::vector<GlslFunction*>& functionList, FunctionSet& calledFunctions, GlslFunction*& funcMain)
+bool HlslLinker::buildFunctionLists(HlslCrossCompiler* comp, const std::string& entryPoint, GlslFunction*& globalFunction, std::vector<GlslFunction*>& functionList, FunctionSet& calledFunctions, GlslFunction*& funcMain)
 {
+	EShLanguage lang = this->shaderType;
 	// build the list of functions
 	std::vector<GlslFunction*> &fl = comp->functionList;
 	// cg profile specific entry point
@@ -738,8 +745,8 @@ void HlslLinker::buildUniformsAndLibFunctions(const FunctionSet& calledFunctions
 	constants.resize(std::unique(constants.begin(), constants.end()) - constants.begin());
 }
 
-
-void HlslLinker::emitLibraryFunctions(const std::set<TOperator>& libFunctions, EShLanguage lang, bool usePrecision)
+//return false if some functions are not supproted in this target version
+bool HlslLinker::emitLibraryFunctions(const std::set<TOperator>& libFunctions, EShLanguage lang, bool usePrecision)
 {
 	// library Functions & required extensions
 	std::string shaderExtensions, shaderLibFunctions;
@@ -747,7 +754,34 @@ void HlslLinker::emitLibraryFunctions(const std::set<TOperator>& libFunctions, E
 	{
 		for (std::set<TOperator>::const_iterator it = libFunctions.begin(); it != libFunctions.end(); it++)
 		{
+			if (this->shaderType == EShLangFragment && (this->targetVersion == ETargetGLSL_110 || this->targetVersion == ETargetGLSL_ES_100))
+			{
+				//check for unsupported functions
+				std::string unsupportedFunc = "";
+				switch (*it){
+				case EOpTex1DLod:
+					unsupportedFunc = "tex1Dlod";
+					break;
+				case EOpTex2DLod:
+					unsupportedFunc = "tex2Dlod";
+					break;
+				case EOpTex3DLod:
+					unsupportedFunc = "tex3Dlod";
+					break;
+				case EOpTexCubeLod:
+					unsupportedFunc = "texCUBElod";
+					break;
+				}
+
+				if (unsupportedFunc.size() != 0)
+				{ 
+					infoSink.info << "'" << unsupportedFunc <<"' is unsupported in GLSL "<< kTargetVersionNumberStrings[this->targetVersion] << " fragment shader\n";
+					return false;
+				}
+			}//if (this->shaderType == EShLangFragment && (this->targetVersion == ETargetGLSL_110 || this->targetVersion == ETargetGLSL_ES_100))
+			
 			const std::string &func = getHLSLSupportCode(*it, shaderExtensions, lang==EShLangVertex, usePrecision);
+			
 			if (!func.empty())
 			{
 				shaderLibFunctions += func;
@@ -757,6 +791,8 @@ void HlslLinker::emitLibraryFunctions(const std::set<TOperator>& libFunctions, E
 	}
 	shader << shaderExtensions;
 	shader << shaderLibFunctions;
+
+	return true;
 }
 
 
@@ -1178,17 +1214,19 @@ bool HlslLinker::emitReturnValue(const EGlslSymbolType retType, GlslFunction* fu
 
 bool HlslLinker::link(HlslCrossCompiler* compiler, const char* entryFunc, const char* profile, ETargetVersion targetVersion, unsigned options)
 {
-	if (profile != NULL)
-		this->cgProfile = profile;
-	else
-		this->cgProfile = "";
-
 	if (!linkerSanityCheck(compiler, entryFunc))
 		return false;
 	
 	const bool usePrecision = Hlsl2Glsl_VersionUsesPrecision(targetVersion);
 	
 	EShLanguage lang = compiler->getLanguage();
+	if (profile != NULL)
+		this->cgProfile = profile;
+	else
+		this->cgProfile = "";
+
+	this->targetVersion = targetVersion;
+	this->shaderType = lang;
 	std::string entryPoint = GetEntryName (entryFunc);
 	
 	// figure out all relevant functions
@@ -1196,7 +1234,7 @@ bool HlslLinker::link(HlslCrossCompiler* compiler, const char* entryFunc, const 
 	std::vector<GlslFunction*> functionList;
 	FunctionSet calledFunctions;
 	GlslFunction* funcMain = NULL;
-	if (!buildFunctionLists(compiler, lang, entryPoint, globalFunction, functionList, calledFunctions, funcMain))
+	if (!buildFunctionLists(compiler, entryPoint, globalFunction, functionList, calledFunctions, funcMain))
 		return false;
 	assert(globalFunction);
 	assert(funcMain);
@@ -1220,7 +1258,8 @@ bool HlslLinker::link(HlslCrossCompiler* compiler, const char* entryFunc, const 
 
 	// print all the components collected above.
 
-	emitLibraryFunctions (libFunctions, lang, usePrecision);
+	if (!emitLibraryFunctions (libFunctions, lang, usePrecision))
+		return false;
 	emitStructs(compiler);
 	emitGlobals (globalFunction, constants);
 	EmitCalledFunctions (shader, calledFunctions);
