@@ -183,7 +183,7 @@ public:
 	void setInline(bool b) {m_isInline = b;}
 	bool isInline() const {return m_isInline;}
 
-	//is this function supported the specified cg profile
+	//doest this function support the specified cg profile
 	bool isProfileSupported(const TString& cgProfile) const{
 		const TString& funcName = this->getName();
 		if (cgProfile.compare(""))//not empty

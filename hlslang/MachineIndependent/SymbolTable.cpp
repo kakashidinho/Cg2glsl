@@ -357,20 +357,32 @@ TSymbol* TSymbolTableLevel::findCompatible (const TFunction *call, bool &ambiguo
 {
 	ambiguous = false;
 	
+	const TString &preferProfile = GlobalParseContext->cgProfile;
 	const TString &name = call->getName();   
 	std::vector<TFunction*> funcList;
+	TFunction* bestProfileFunc = NULL;//best candidate function based on preferred profile
 	
-	// 1 and 2. Add all functions with matching names and argument count to the set to consider
+	// 1 and 2. Add all functions with matching names and argument count to the set to consider.
+	// Find best candidate function based on prefered profile
 	tLevel::const_iterator it = level.begin();
 	while (it != level.end())
 	{
 		if (it->second->isFunction())
 		{
 			TFunction* func = (TFunction*)it->second;
-			if ((func->getName() == name || (func->getOriginalName() == name && func->isProfileSupported(GlobalParseContext->cgProfile)) 
-				&& call->getParamCount() == func->getParamCount()))
-				funcList.push_back (func);
-		}
+			if (call->getParamCount() == func->getParamCount())
+			{
+				if (func->getName() == name)//name match
+					funcList.push_back (func);
+				else if (func->getOriginalName() == name)//name match if remove profiles prefix
+				{
+					if (func->isProfileSupported(preferProfile))
+						bestProfileFunc = func;//best function found
+					else if (bestProfileFunc == NULL)//if not found best match yet
+						bestProfileFunc = func;//accept this function
+				}
+			}//call->getParamCount() == func->getParamCount()
+		}//if (it->second->isFunction())
 		++it;
 	}
 		
@@ -452,6 +464,8 @@ TSymbol* TSymbolTableLevel::findCompatible (const TFunction *call, bool &ambiguo
 		}
 	}
 	
+	if (bestProfileFunc != NULL)//found profile supported function
+		return bestProfileFunc;
 	
 	// If the function list has 1 element, then we were successful
 	if ( funcList.size() == 1 )

@@ -380,6 +380,13 @@ static std::string optimizeGLSL(const char *source,
     {
 		out = glslopt_get_output(shader);
     }
+	else
+	{
+		const char * log = glslopt_get_log(shader);
+
+		printf("%s\n", log);
+
+	}
     glslopt_shader_delete(shader);
 
 	return out;

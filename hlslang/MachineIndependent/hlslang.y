@@ -562,7 +562,7 @@ function_call
                     $$->setType(fnCandidate->getReturnType());                   
                     
                     $$->getAsAggregate()->setName(fnCandidate->getMangledName());
-                    $$->getAsAggregate()->setPlainName(fnCandidate->getName());
+                    $$->getAsAggregate()->setPlainName(fnCandidate->getOriginalName());
 
                     TQualifier qual;
                     for (int i = 0; i < fnCandidate->getParamCount(); ++i) {

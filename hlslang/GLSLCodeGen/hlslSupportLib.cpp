@@ -764,10 +764,10 @@ void initializeHLSLSupportLibrary()
 		"}\n\n" )
 		);
 	hlslSupportLibExtensionsESOverrides->insert (std::make_pair(EOpTex2DLod, std::make_pair("","#extension GL_EXT_shader_texture_lod : require\n")));
-#else//texturèdLod is supported in GLES
+#else//texturèdProjLod is supported in GLES
 	hlslSupportLibESOverrides->insert( CodeMap::value_type( EOpTex2DLod,
 		"vec4 xll_tex2Dlod(sampler2D s, vec4 coord) {\n"
-		"   return texture2DLod( s, coord.xy, coord.w);\n"
+		"   return texture2DProjLod( s, vec3(coord.xy, 1.0), coord.w);\n"
 		"}\n\n" )
 		);
 	hlslSupportLibExtensionsESOverrides->insert (std::make_pair(EOpTex2DLod, std::make_pair("","")));
