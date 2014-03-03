@@ -11,6 +11,10 @@ Changes from original aras-p's HLSL2GLSL (October 2012 version)
 * Translate non-square matrices to array of vectors, so that it can be used in GLSL 1.10 and GLSL ES 1.00
 * Support Cg profile versions of functions.
 
+Notes
+--------
+
+* Only column major matrix mode is supported by this translator. Note that row major is default in Nvidia Cg compiler. You have to include #pragma pack_matrix(column_major) in your code to tell Cg compiler that you are using column-major matrices. If you don't use Cg compiler then just ignore it.
 
 Notes from aras-p
 --------
