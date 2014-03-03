@@ -754,33 +754,41 @@ bool HlslLinker::emitLibraryFunctions(const std::set<TOperator>& libFunctions, E
 	{
 		for (std::set<TOperator>::const_iterator it = libFunctions.begin(); it != libFunctions.end(); it++)
 		{
-			if (this->shaderType == EShLangFragment && (this->targetVersion == ETargetGLSL_110 || this->targetVersion == ETargetGLSL_ES_100))
+			TOperator op = *it;
+			if (this->shaderType == EShLangFragment 
+				&& (this->targetVersion == ETargetGLSL_110 
+				|| this->targetVersion == ETargetGLSL_ES_100
+				|| this->targetVersion == ETargetGLSL_120))
 			{
 				//check for unsupported functions
 				std::string unsupportedFunc = "";
-				switch (*it){
+				switch (op){
 				case EOpTex1DLod:
 					unsupportedFunc = "tex1Dlod";
+					op = EOpTex1DLodFallback;
 					break;
 				case EOpTex2DLod:
 					unsupportedFunc = "tex2Dlod";
+					op = EOpTex2DLodFallback;
 					break;
 				case EOpTex3DLod:
 					unsupportedFunc = "tex3Dlod";
+					op = EOpTex3DLodFallback;
 					break;
 				case EOpTexCubeLod:
 					unsupportedFunc = "texCUBElod";
+					op = EOpTexCubeLodFallback;
 					break;
 				}
 
 				if (unsupportedFunc.size() != 0)
 				{ 
-					infoSink.info << "'" << unsupportedFunc <<"' is unsupported in GLSL "<< kTargetVersionNumberStrings[this->targetVersion] << " fragment shader\n";
-					return false;
+					infoSink.info << "Warning: '" << unsupportedFunc <<"' is unsupported in GLSL "<< kTargetVersionNumberStrings[this->targetVersion] << " fragment shader\n";
+					infoSink.info << "The Lod part of '" << unsupportedFunc <<"' will be ignored\n";
 				}
 			}//if (this->shaderType == EShLangFragment && (this->targetVersion == ETargetGLSL_110 || this->targetVersion == ETargetGLSL_ES_100))
 			
-			const std::string &func = getHLSLSupportCode(*it, shaderExtensions, lang==EShLangVertex, usePrecision);
+			const std::string &func = getHLSLSupportCode(op, shaderExtensions, lang==EShLangVertex, usePrecision);
 			
 			if (!func.empty())
 			{

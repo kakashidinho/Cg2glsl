@@ -237,6 +237,12 @@ enum TOperator
 
 	// Ternary selection on vector
 	EOpVecTernarySel,
+
+	// Fallback textureLod functions for unsupported version
+	EOpTex1DLodFallback,
+	EOpTex2DLodFallback,
+	EOpTex3DLodFallback,
+	EOpTexCubeLodFallback,
 };
 
 class TIntermTraverser;
