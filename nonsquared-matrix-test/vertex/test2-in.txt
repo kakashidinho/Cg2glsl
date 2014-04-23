@@ -1,0 +1,41 @@
+float3 worldTransformCoords(float3 posL, float4x3 worldMatrix){
+	return mul(float4(posL, 1.0), worldMatrix);
+}
+
+float3 worldTransformNormal(float3 normalL, float4x3 worldMatrix){
+	float3 normalW = mul(float4(normalL, 0.0), worldMatrix);
+	return normalize(normalW);
+}
+
+void transformWVP(float3 posL, 
+	float4x3 worldMatrix, 
+	float4x4 viewMatrix, 
+	float4x4 projMatrix,
+	out float3 posW,
+	out float4 posH)
+{
+
+	posW = worldTransformCoords(posL, worldMatrix);
+	float4 posV = mul(float4(posW, 1.0), viewMatrix);
+	posH = mul(posV, projMatrix);
+}
+
+uniform float4x3 worldMat;
+uniform float4x4 viewMat;
+uniform float4x4 projMat;
+
+float4 main(in float2 pos: POSITION,
+				in float3 normal: NORMAL) : POSITION {
+	float4 l_posH = {0};
+	float3 l_posW;
+	
+	transformWVP(l_posW, worldMat, viewMat, projMat, l_posW, l_posH);
+	
+	float3 normalW = worldTransformNormal(normal, worldMat) + worldTransformNormal(normal, worldMat);
+	
+	
+	
+	l_posH.xy = pos + normalW.xy;
+	
+	return l_posH;
+}

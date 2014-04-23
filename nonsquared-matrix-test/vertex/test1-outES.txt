@@ -1,0 +1,338 @@
+
+#line 2
+struct float3x2 {
+    highp vec3 col0;
+    highp vec3 col1;
+};
+#line 8
+struct float2x3 {
+    highp vec2 col0;
+    highp vec2 col1;
+    highp vec2 col2;
+};
+#line 15
+struct float4x3 {
+    highp vec4 col0;
+    highp vec4 col1;
+    highp vec4 col2;
+};
+#line 22
+struct float3x4 {
+    highp vec3 col0;
+    highp vec3 col1;
+    highp vec3 col2;
+    highp vec3 col3;
+};
+#line 30
+struct float4x2 {
+    highp vec4 col0;
+    highp vec4 col1;
+};
+#line 36
+struct float2x4 {
+    highp vec2 col0;
+    highp vec2 col1;
+    highp vec2 col2;
+    highp vec2 col3;
+};
+#line 44
+#line 48
+#line 52
+#line 56
+#line 60
+#line 64
+#line 69
+#line 73
+#line 77
+#line 82
+#line 88
+#line 93
+#line 100
+#line 107
+#line 112
+#line 118
+#line 124
+#line 131
+#line 137
+#line 145
+#line 153
+#line 159
+#line 166
+#line 172
+#line 179
+#line 185
+#line 192
+#line 200
+#line 208
+#line 215
+#line 223
+#line 228
+#line 234
+#line 239
+#line 245
+#line 251
+#line 259
+#line 267
+#line 274
+#line 282
+#line 291
+#line 305
+#line 318
+#line 330
+#line 335
+#line 340
+#line 346
+#line 350
+#line 354
+#line 358
+#line 362
+#line 366
+#line 371
+#line 375
+#line 379
+#line 383
+#line 387
+#line 391
+#line 396
+#line 400
+#line 404
+#line 408
+#line 412
+#line 416
+#line 421
+#line 425
+#line 429
+#line 433
+#line 437
+#line 441
+#line 447
+#line 451
+#line 455
+#line 459
+#line 463
+#line 467
+#line 473
+#line 477
+#line 481
+#line 485
+#line 489
+#line 493
+#line 499
+#line 503
+#line 507
+#line 511
+#line 515
+#line 519
+#line 525
+#line 534
+#line 544
+#line 554
+#line 586
+#line 599
+#line 655
+#line 672
+#line 682
+#line 704
+#line 740
+#line 1
+uniform vec4 worldMat[3];
+#line 9
+highp vec3 worldTransformNormal( in highp vec3 normalL, in float4x3 worldMatrix );
+highp vec3 mul( in highp vec4 v, in float4x3 m );
+highp vec4 xlat_main( in highp vec2 pos, in highp vec3 normal );
+#line 1
+highp vec3 worldTransformNormal( in highp vec3 normalL, in float4x3 worldMatrix ) {
+        highp vec4 xlat_inlinevartemp35 = vec4( normalL, 0.0);
+    float4x3 xlat_inlinevartemp36 = worldMatrix;
+    highp vec3 xlat_inlinerettemp37;
+    {
+        #line 546
+highp vec3         vec;
+        vec.x = dot( xlat_inlinevartemp36.col0, xlat_inlinevartemp35);
+        vec.y = dot( xlat_inlinevartemp36.col1, xlat_inlinevartemp35);
+        vec.z = dot( xlat_inlinevartemp36.col2, xlat_inlinevartemp35);
+xlat_inlinerettemp37 =         vec;
+    }
+    highp vec3 xlat_bintemp38 = xlat_inlinerettemp37;
+highp vec3 normalW = xlat_bintemp38;
+    #line 3
+return     normalize(normalW);
+}
+#line 544
+highp vec3 mul( in highp vec4 v, in float4x3 m ) {
+highp vec3     vec;
+    vec.x = dot( m.col0, v);
+    #line 548
+    vec.y = dot( m.col1, v);
+    vec.z = dot( m.col2, v);
+return     vec;
+}
+#line 9
+highp vec4 xlat_main( in highp vec2 pos, in highp vec3 normal ) {
+highp vec4     posH = vec4( 0.0);
+        highp vec3 xlat_inlinevartemp39 = normal;
+    float4x3 xlat_inlinevartemp40 = float4x3(worldMat[0], worldMat[1], worldMat[2]);
+    highp vec3 xlat_inlinerettemp41;
+    {
+        #line 2
+                highp vec4 xlat_inlinevartemp42 = vec4( xlat_inlinevartemp39, 0.0);
+        float4x3 xlat_inlinevartemp43 = xlat_inlinevartemp40;
+        highp vec3 xlat_inlinerettemp44;
+        {
+            #line 546
+highp vec3             vec;
+            vec.x = dot( xlat_inlinevartemp43.col0, xlat_inlinevartemp42);
+            vec.y = dot( xlat_inlinevartemp43.col1, xlat_inlinevartemp42);
+            vec.z = dot( xlat_inlinevartemp43.col2, xlat_inlinevartemp42);
+xlat_inlinerettemp44 =             vec;
+        }
+        highp vec3 xlat_bintemp45 = xlat_inlinerettemp44;
+highp vec3 normalW_1 = xlat_bintemp45;
+xlat_inlinerettemp41 =         normalize(normalW_1);
+    }
+highp vec3 xlat_inlinevartemp46 =     normal;
+    float4x3 xlat_inlinevartemp47 = float4x3(worldMat[0], worldMat[1], worldMat[2]);
+    highp vec3 xlat_inlinerettemp48;
+    {
+        #line 2
+                highp vec4 xlat_inlinevartemp49 = vec4( xlat_inlinevartemp46, 0.0);
+        float4x3 xlat_inlinevartemp50 = xlat_inlinevartemp47;
+        highp vec3 xlat_inlinerettemp51;
+        {
+            #line 546
+highp vec3             vec;
+            vec.x = dot( xlat_inlinevartemp50.col0, xlat_inlinevartemp49);
+            vec.y = dot( xlat_inlinevartemp50.col1, xlat_inlinevartemp49);
+            vec.z = dot( xlat_inlinevartemp50.col2, xlat_inlinevartemp49);
+xlat_inlinerettemp51 =             vec;
+        }
+        highp vec3 xlat_bintemp52 = xlat_inlinerettemp51;
+highp vec3 normalW_1 = xlat_bintemp52;
+xlat_inlinerettemp48 =         normalize(normalW_1);
+    }
+    highp vec3 xlat_bintemp53 = (xlat_inlinerettemp41 + xlat_inlinerettemp48);
+    highp vec3 xlat_bintemp54 = xlat_bintemp53;
+highp vec3 normalW = xlat_bintemp54;
+    #line 14
+        highp vec3 xlat_inlinevartemp55 = normal;
+    float4x3 xlat_inlinevartemp56 = float4x3(worldMat[0], worldMat[1], worldMat[2]);
+    highp vec3 xlat_inlinerettemp57;
+    {
+        #line 2
+                highp vec4 xlat_inlinevartemp58 = vec4( xlat_inlinevartemp55, 0.0);
+        float4x3 xlat_inlinevartemp59 = xlat_inlinevartemp56;
+        highp vec3 xlat_inlinerettemp60;
+        {
+            #line 546
+highp vec3             vec;
+            vec.x = dot( xlat_inlinevartemp59.col0, xlat_inlinevartemp58);
+            vec.y = dot( xlat_inlinevartemp59.col1, xlat_inlinevartemp58);
+            vec.z = dot( xlat_inlinevartemp59.col2, xlat_inlinevartemp58);
+xlat_inlinerettemp60 =             vec;
+        }
+        highp vec3 xlat_bintemp61 = xlat_inlinerettemp60;
+highp vec3 normalW_1 = xlat_bintemp61;
+xlat_inlinerettemp57 =         normalize(normalW_1);
+    }
+highp vec3 xlat_bintemp62 = (xlat_inlinerettemp57 +     normalW);
+highp vec3 xlat_inlinevartemp63 =     normal;
+    float4x3 xlat_inlinevartemp64 = float4x3(worldMat[0], worldMat[1], worldMat[2]);
+    highp vec3 xlat_inlinerettemp65;
+    {
+        #line 2
+                highp vec4 xlat_inlinevartemp66 = vec4( xlat_inlinevartemp63, 0.0);
+        float4x3 xlat_inlinevartemp67 = xlat_inlinevartemp64;
+        highp vec3 xlat_inlinerettemp68;
+        {
+            #line 546
+highp vec3             vec;
+            vec.x = dot( xlat_inlinevartemp67.col0, xlat_inlinevartemp66);
+            vec.y = dot( xlat_inlinevartemp67.col1, xlat_inlinevartemp66);
+            vec.z = dot( xlat_inlinevartemp67.col2, xlat_inlinevartemp66);
+xlat_inlinerettemp68 =             vec;
+        }
+        highp vec3 xlat_bintemp69 = xlat_inlinerettemp68;
+highp vec3 normalW_1 = xlat_bintemp69;
+xlat_inlinerettemp65 =         normalize(normalW_1);
+    }
+    highp vec3 xlat_bintemp70 = (xlat_bintemp62 + xlat_inlinerettemp65);
+    highp vec3 xlat_bintemp71 = xlat_bintemp70;
+highp vec3 normalW2 = xlat_bintemp71;
+    #line 16
+        highp vec3 xlat_inlinevartemp72 = normal;
+    float4x3 xlat_inlinevartemp73 = float4x3(worldMat[0], worldMat[1], worldMat[2]);
+    highp vec3 xlat_inlinerettemp74;
+    {
+        #line 2
+                highp vec4 xlat_inlinevartemp75 = vec4( xlat_inlinevartemp72, 0.0);
+        float4x3 xlat_inlinevartemp76 = xlat_inlinevartemp73;
+        highp vec3 xlat_inlinerettemp77;
+        {
+            #line 546
+highp vec3             vec;
+            vec.x = dot( xlat_inlinevartemp76.col0, xlat_inlinevartemp75);
+            vec.y = dot( xlat_inlinevartemp76.col1, xlat_inlinevartemp75);
+            vec.z = dot( xlat_inlinevartemp76.col2, xlat_inlinevartemp75);
+xlat_inlinerettemp77 =             vec;
+        }
+        highp vec3 xlat_bintemp78 = xlat_inlinerettemp77;
+highp vec3 normalW_1 = xlat_bintemp78;
+xlat_inlinerettemp74 =         normalize(normalW_1);
+    }
+highp vec3 xlat_bintemp79 = (xlat_inlinerettemp74 +     normalW);
+highp vec3 xlat_inlinevartemp80 =     normal;
+    float4x3 xlat_inlinevartemp81 = float4x3(worldMat[0], worldMat[1], worldMat[2]);
+    highp vec3 xlat_inlinerettemp82;
+    {
+        #line 2
+                highp vec4 xlat_inlinevartemp83 = vec4( xlat_inlinevartemp80, 0.0);
+        float4x3 xlat_inlinevartemp84 = xlat_inlinevartemp81;
+        highp vec3 xlat_inlinerettemp85;
+        {
+            #line 546
+highp vec3             vec;
+            vec.x = dot( xlat_inlinevartemp84.col0, xlat_inlinevartemp83);
+            vec.y = dot( xlat_inlinevartemp84.col1, xlat_inlinevartemp83);
+            vec.z = dot( xlat_inlinevartemp84.col2, xlat_inlinevartemp83);
+xlat_inlinerettemp85 =             vec;
+        }
+        highp vec3 xlat_bintemp86 = xlat_inlinerettemp85;
+highp vec3 normalW_1 = xlat_bintemp86;
+xlat_inlinerettemp82 =         normalize(normalW_1);
+    }
+    highp vec3 xlat_bintemp87 = (xlat_bintemp79 + xlat_inlinerettemp82);
+highp vec3 xlat_inlinevartemp88 =     normalW2;
+    float4x3 xlat_inlinevartemp89 = float4x3(worldMat[0], worldMat[1], worldMat[2]);
+    highp vec3 xlat_inlinerettemp90;
+    {
+        #line 2
+                highp vec4 xlat_inlinevartemp91 = vec4( xlat_inlinevartemp88, 0.0);
+        float4x3 xlat_inlinevartemp92 = xlat_inlinevartemp89;
+        highp vec3 xlat_inlinerettemp93;
+        {
+            #line 546
+highp vec3             vec;
+            vec.x = dot( xlat_inlinevartemp92.col0, xlat_inlinevartemp91);
+            vec.y = dot( xlat_inlinevartemp92.col1, xlat_inlinevartemp91);
+            vec.z = dot( xlat_inlinevartemp92.col2, xlat_inlinevartemp91);
+xlat_inlinerettemp93 =             vec;
+        }
+        highp vec3 xlat_bintemp94 = xlat_inlinerettemp93;
+highp vec3 normalW_1 = xlat_bintemp94;
+xlat_inlinerettemp90 =         normalize(normalW_1);
+    }
+    highp vec3 xlat_bintemp95 = (xlat_bintemp87 + xlat_inlinerettemp90);
+    highp vec3 xlat_bintemp96 = xlat_bintemp95;
+highp vec3 normalW3 = xlat_bintemp96;
+    #line 19
+    posH.xy = (((pos + normalW.xy) + normalW2.xy) + normalW3.xy);
+return     posH;
+}
+void main() {
+    highp vec4 xl_retval;
+    xl_retval = xlat_main( vec2(gl_Vertex), vec3(gl_Normal));
+    gl_Position = vec4(xl_retval);
+}
+
+// uniforms:
+// worldMat:<none> type 25 arrsize 0

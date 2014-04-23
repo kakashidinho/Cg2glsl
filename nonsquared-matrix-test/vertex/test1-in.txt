@@ -1,0 +1,22 @@
+float3 worldTransformNormal(float3 normalL, float4x3 worldMatrix){
+	float3 normalW = mul(float4(normalL, 0.0), worldMatrix);
+	return normalize(normalW);
+}
+
+uniform float4x3 worldMat;
+
+float4 main(in float2 pos: POSITION,
+				in float3 normal: NORMAL) : POSITION {
+	float4 posH = {0};
+	
+	float3 normalW = worldTransformNormal(normal, worldMat) + worldTransformNormal(normal, worldMat);
+	
+	float3 normalW2 = worldTransformNormal(normal, worldMat) + normalW + worldTransformNormal(normal, worldMat);
+	
+	float3 normalW3 = worldTransformNormal(normal, worldMat) + normalW + worldTransformNormal(normal, worldMat)
+					+ worldTransformNormal(normalW2, worldMat);
+	
+	posH.xy = pos + normalW.xy + normalW2.xy + normalW3.xy;
+	
+	return posH;
+}
