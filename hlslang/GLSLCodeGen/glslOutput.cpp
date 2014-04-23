@@ -143,6 +143,9 @@ void writeTempVarAssign(const TType *type, const char* tempVarName, TGlslOutputT
 
 void writeTempVarAssign(const TType *type, const std::string& tempVarName, TGlslOutputTraverser* goit, std::stringstream& out)
 {
+#if defined DEBUG || defined _DEBUG
+	bool dbgbreak = tempVarName.compare("xlat_bintemp45") == 0;
+#endif
 	writeTempVarAssign(type, tempVarName.c_str(), goit, out);
 }
 
@@ -542,7 +545,7 @@ TGlslOutputTraverser::TGlslOutputTraverser(TInfoSink& i,
 , isInlining(false)
 , inlineRetVar(NULL)
 , inlineParamsMap(NULL)
-, isVisitDeclaration(false)
+, firstVisitDeclaration(false)
 , declareUniform(false)
 {
 	m_LastLineOutput.file = NULL;
@@ -678,7 +681,7 @@ bool TGlslOutputTraverser::traverseDeclaration(bool preVisit, TIntermDeclaration
 	TGlslOutputTraverser* goit = static_cast<TGlslOutputTraverser*>(it);
 	GlslFunction *current = goit->current;
 	std::stringstream& out = current->getActiveOutput();
-	bool l_parentIsVisitDeclaration = goit->isVisitDeclaration;
+	bool l_parentIsVisitDeclaration = goit->firstVisitDeclaration;
 	bool l_parentDeclareUniform = goit->declareUniform;
 
 	if (decl->containsArrayInitialization())
@@ -701,9 +704,9 @@ bool TGlslOutputTraverser::traverseDeclaration(bool preVisit, TIntermDeclaration
 		type.setArray(true);
 	}
 
-	goit->isVisitDeclaration = true;
+	goit->firstVisitDeclaration = true;
 
-	//break multideclaration to multiple declaration statement
+	//break multideclaration to multiple declaration statements
 	TIntermSequence singleSeg;
 	if (decl->isSingleDeclaration())
 		singleSeg.push_back(decl->getDeclaration());
@@ -714,6 +717,9 @@ bool TGlslOutputTraverser::traverseDeclaration(bool preVisit, TIntermDeclaration
 		ite != declSeg.end();
 		++ite)
 	{
+#if defined DEBUG || defined _DEBUG
+		TIntermSymbol * itermNode = dynamic_cast<TIntermSymbol*> (*ite);
+#endif
 		//visit initializer first
 		std::stringstream initilizerOut;
 		goit->tempVariableName = "";
@@ -761,7 +767,7 @@ bool TGlslOutputTraverser::traverseDeclaration(bool preVisit, TIntermDeclaration
 		current->endStatement();
 	}
 
-	goit->isVisitDeclaration = l_parentIsVisitDeclaration;
+	goit->firstVisitDeclaration = l_parentIsVisitDeclaration;
 	goit->declareUniform = l_parentDeclareUniform;
 	return false;
 }
@@ -1838,7 +1844,8 @@ bool TGlslOutputTraverser::traverseBinary( bool preVisit, TIntermBinary *node, T
 	   std::string leftOut;
 	   std::stringstream childOutStream;//this also be used as rightOut
 	   bool needTempVar = false;
-	   bool isDeclWithInitializer = goit->isVisitDeclaration && !l_parentRequireValue && node->getOp() == EOpAssign;
+	   bool l_parentFirstVisitDeclaration = goit->firstVisitDeclaration;//save state
+	   goit->firstVisitDeclaration = false;//avoid telling recursive traversal that we are first visiting declaration
 	   //----traverse left and right-------------------
 		goit->parentRequireValue = true;//require them return values
 		//left
@@ -1846,6 +1853,9 @@ bool TGlslOutputTraverser::traverseBinary( bool preVisit, TIntermBinary *node, T
 		current->setActiveOutput(&childOutStream);
 		if (node->getLeft())
 		{
+#if defined DEBUG || defined _DEBUG
+			TIntermDeclaration* declNode = node->getLeft()->getAsDeclaration();
+#endif
 			node->getLeft()->traverse(goit);	
 			if (goit->tempVariableName.size() > 0)//we have temporary variable
 			{
@@ -1874,7 +1884,7 @@ bool TGlslOutputTraverser::traverseBinary( bool preVisit, TIntermBinary *node, T
 		
 		current->setActiveOutput(&out);
 		goit->tempVariableName = "";
-		needTempVar = needTempVar && (l_parentRequireValue || isDeclWithInitializer);//really need temp var ?
+		needTempVar = needTempVar && (l_parentRequireValue || l_parentFirstVisitDeclaration);//really need temp var ?
 		current->beginStatement();
 		if (needTempVar)
 		{
@@ -1888,7 +1898,8 @@ bool TGlslOutputTraverser::traverseBinary( bool preVisit, TIntermBinary *node, T
 
 		if (needsParens)
 		 out << '(';
-		if (!needTempVar || !isDeclWithInitializer)
+
+		if (!l_parentFirstVisitDeclaration)
 		{
 			if (node->getLeft())
 				out << leftOut;
@@ -1902,7 +1913,9 @@ bool TGlslOutputTraverser::traverseBinary( bool preVisit, TIntermBinary *node, T
 		if (needTempVar)
 		  current->endStatement();
 
+		//restore states
 		goit->parentRequireValue = l_parentRequireValue;
+		goit->firstVisitDeclaration = l_parentFirstVisitDeclaration; 
    }
    else
    {
@@ -2641,7 +2654,7 @@ bool TGlslOutputTraverser::traverseAggregate( bool preVisit, TIntermAggregate *n
             (*sit)->traverse(it);
             if ( sit+1 != sequence.end())
 			{
-				if (goit->isVisitDeclaration)
+				if (goit->firstVisitDeclaration)
 					current->endStatement();
 				else
 					out << ", ";

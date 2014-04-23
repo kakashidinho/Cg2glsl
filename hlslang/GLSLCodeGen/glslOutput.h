@@ -83,7 +83,7 @@ public:
 	std::map<TString, TIntermAggregate*> &inlinefuncList;
 
 	//
-	bool isVisitDeclaration;
+	bool firstVisitDeclaration;
 	bool declareUniform;
 	TSourceLoc m_LastLineOutput;
 	unsigned swizzleAssignTempCounter;

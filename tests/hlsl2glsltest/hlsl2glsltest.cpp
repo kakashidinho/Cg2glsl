@@ -666,7 +666,7 @@ int main (int argc, const char** argv)
 				if (ok && version2 != ETargetVersionCount)
 					ok = TestCombinedFile(testFolder + "/" + inname, version2, hasOpenGL);
 			} 
-#if 0
+#if 1
 			else {
 				ok = TestFile(TestRun(type), testFolder + "/" + inname, version1, 0, hasOpenGL);
 				if (ok && version2 != ETargetVersionCount)
