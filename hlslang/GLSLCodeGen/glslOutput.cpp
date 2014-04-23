@@ -293,6 +293,9 @@ void writeComparison( const TString &compareOp, const TString &compareCall, TInt
 
 void writeFuncCall( const TString &name, TIntermAggregate *node, TGlslOutputTraverser* goit, bool bGenMatrix = false )
 {
+#if defined DEBUG || defined _DEBUG
+	bool dbgBreak = name.compare("transformWVP") == 0;
+#endif
    TIntermSequence::iterator sit;
    TIntermSequence &sequence = node->getSequence(); 
    GlslFunction *current = goit->current;
@@ -1899,7 +1902,7 @@ bool TGlslOutputTraverser::traverseBinary( bool preVisit, TIntermBinary *node, T
 		if (needsParens)
 		 out << '(';
 
-		if (!l_parentFirstVisitDeclaration)
+		if (!needTempVar || !l_parentFirstVisitDeclaration)
 		{
 			if (node->getLeft())
 				out << leftOut;
